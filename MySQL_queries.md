@@ -22,7 +22,7 @@ Navigate to  `c:/Program Files/MySQL/MySQL Server 8.0 /bin` (windows)  or `cd /b
 on command line `mysql -u root -p` then enter password when prompted.
 
 ***
-## School database.
+### School database.
 The `school.sql` is a database with two tables `subject` and `teacher` .
 
 **Subject table** with 3 attributes
@@ -37,16 +37,18 @@ The `school.sql` is a database with two tables `subject` and `teacher` .
 - Experience
 - dob
 
-### `show tables;`
-------------------
-| Tables_in_school |
-------------------
-| subject          |
-| teacher          |
-------------------
+#### `show tables;`
+
+ Tables_in_school 
+
+ subject          
+ teacher          
+
 2 rows in set (0.01 sec)
 
-### `describe subject;`
+```sql
+describe subject;
+```
 
 
 | Field         | Type        | Null | Key | Default | Extra |
@@ -56,7 +58,9 @@ The `school.sql` is a database with two tables `subject` and `teacher` .
 | OnLeavingCert | tinyint(1)  | YES  |     | NULL    |       |
  
 
-### `describe teacher;`
+```sql
+describe teacher;
+```
 
 | Field      | Type          | Null | Key | Default | Extra          |
  ---| ---| ---| ---| ---| --|
@@ -68,20 +72,22 @@ The `school.sql` is a database with two tables `subject` and `teacher` .
 
 5 rows in set (0.00 sec)
 
-## `DESCRIBE <table>;`
+### `DESCRIBE <table>;`
 - The `Type` shows the type of data for each Field as well as the maximum number of characters allowed.
 
 - The `Key` column shows which field(s) is the primary key
 
-## `SELECT * FROM <table>;` 
+### `SELECT * FROM <table>;` 
 
 - `select * from teacher` to show all  data in the teacher table
 - `select * from subject` to show all data in the subject table
 
-### select * from teacher;
+```sql
+SELECT * FROM teacher;
+```
 
 | tid | Name         | level | experience | dob        |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---| ---| ---| 
 |   1 | Mr. Pasteur  | L     |         15 | 1960-02-02 |
 |   2 | Ms. Dubois   | L     |         22 | 1967-09-02 |
 |   3 | Ms. Smith    | J     |          4 | 1980-03-23 |
@@ -92,10 +98,11 @@ The `school.sql` is a database with two tables `subject` and `teacher` .
 
 7 rows in set (0.01 sec)
 
-### select * from subject;
+
+### SELECT * FROM subject;
 
 | Name      | Teacher      | OnLeavingCert |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---|
 | Biology   | Mr. Pasteur  |             1 |
 | Colouring | Mr. Picasso  |             0 |
 | English   | Mr. Kavanagh |             1 |
@@ -109,21 +116,10 @@ The `school.sql` is a database with two tables `subject` and `teacher` .
 
 ### Show all names of all subjects that are on the leaving cert.
 
-| name     |
-+----------+
-| Biology  |
-| English  |
-| French   |
-| Maths    |
-| Religion |
-
-5 rows in set (0.00 sec)
 ```sql
 select name from subject 
 where onleavingcert =1;
 ```
-
-
 
 | name     |
  ---| 
@@ -159,7 +155,7 @@ where teacher NOT LIKE "Mr.%";
 
 
 | Name     | Teacher    | OnLeavingCert |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---| 
 | French   | Ms. Dubois |             1 |
 | Religion | Fr. Lynch  |             1 |
 | Spelling | Ms. Smith  |             0 |
@@ -175,7 +171,7 @@ AND level = "J";
 ```
 
 | tid | Name        | level | experience | dob        |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---| ---| ---| 
 |   3 | Ms. Smith   | J     |          4 | 1980-03-23 |
 |   6 | Mr. Picasso | J     |         42 | 1939-03-30 |
 
@@ -212,7 +208,7 @@ order by experience desc, level;
 ```
 
 | tid | Name         | level | experience | dob        |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---| ---| ---| 
 |   7 | Fr. Lynch    | L     |         55 | 1939-03-31 |
 |   5 | Mr. Kavanagh | J     |         50 | 1949-11-01 |
 |   6 | Mr. Picasso  | J     |         42 | 1939-03-30 |
@@ -232,7 +228,7 @@ order by name;
 ```
 
 | Name      | Teacher      | OnLeavingCert |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---| 
 | Biology   | Mr. Pasteur  |             1 |
 | Colouring | Mr. Picasso  |             0 |
 | English   | Mr. Kavanagh |             1 |
@@ -250,7 +246,7 @@ order by dob;
 ```
 
 | tid | Name         | level | experience | dob        |
- ---| ---| ---| ---| ---| --|
+ ---| ---| ---| ---| ---| 
 |   7 | Fr. Lynch    | L     |         55 | 1939-03-31 |
 |   5 | Mr. Kavanagh | J     |         50 | 1949-11-01 |
 |   4 | Mr. Hawking  | L     |         40 | 1951-02-19 |
@@ -261,7 +257,7 @@ order by dob;
 ***
 
 
-## car table.
+## The Car table.
 
 
 select * from car;
@@ -286,7 +282,7 @@ select registration, mileage from car where mileage > 130000 AND (colour= "Silve
 
 
 | registration | mileage |
- ---| ---| ---| ---| ---| --|
+ ---| ---| 
 | 10-WH-17931  |  130389 |
 | 11-MO-23431  | 1234123 |
 
@@ -334,7 +330,7 @@ select distinct(make) from car;
 
 
 | make               |
- ---| ---| ---| ---| ---| --|
+ ---| 
 | Toyota             |
 | Ford Motor Company |
 
@@ -373,12 +369,14 @@ personID | name  | age  | sex  | dob        | isStudent |
 
 ***
 
-## employees database
+## The Employees database
 
-`show tables;`  
+```sql
+show tables;
+```  
 
-| Tables_in_employees |
----
+ Tables_in_employees 
+--- |
 | employees           |
 | salaries            |
 
