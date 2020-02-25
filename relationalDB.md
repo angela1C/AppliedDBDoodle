@@ -653,7 +653,61 @@ To delete a function or procedure, use the `DROP` command.  To make a change to 
 
 ```sql
 DROP FUNCTION  <function-name>;
-````
+```
 See Section 13.7.4.1 CREATE FUNCTION Syntax for User-Defined Functions:
 
 [CREATE FUNCTION](https://dev.mysql.com/doc/refman/8.0/en/create-function-udf.html)
+
+***
+
+# Part 4: Normalisation
+
+
+# Normalisation - how to have many connected tables in a database,
+
+## What is Normalisation:
+Normalization is the process of organizing the columns (attributes) and tables (relations) of a relational database to minimize data redundancy.
+
+- A large table (with a large number of attributes rather than a large number of rows) is basically broken down into several smaller tables. 
+- A database is defined as a collection of related data organised in a way where the data can be easily accessed managed and updated.
+- Normalisation takes place when the database is being set up. 
+- Normalisation makes it easier to update a database and makes it less prone to anomalies.
+- A database that is not normalised cannot be easily managed and result in update or deletion anomalies.
+- A normalised database would have more than one table with links between the tables instead of all the data stored in a single table.
+- reference data from another table rather than duplicating the same data.
+
+## Foreign Keys
+
+When creating tables, the link between the tables is defined by the  **foreign key**. 
+- A foreign key is a constraint on the table, on what can be inserted into a table.
+- ensures **referential integrity** and keeps the database **consistent**
+- `SHOW CREATE TABLE` command will show the foreign keys.
+- Tables are joined using the foreign keys.
+
+In the doctor patient example, only values that exist in the doctorID column of the doctor table can be added as a foreign key to the patient table. This is called **Referential integrity** and ensures that the database is consistent. 
+
+## Joining data from tables using foreign keys.
+
+- **`SELECT`** from one table, then **`JOIN`** to another table using the foreign key.
+- **`SHOW CREATE TABLE`** will show any foreign keys referencing another table.
+- rows are joined based on the foreign key.
+- `SELECT` clause contains the fields that will be displayed.
+- `FROM`: select from one table only, not both table
+- `JOIN` to another table.
+- use **alias** names instead of the full table name to make the query less verbose.
+
+Note although the `SELECT` clause is at the start of the query, it is really the last part of the query as it just prints out what you want to have returned and the query starts at the `FROM` clause.
+
+### INNER JOIN
+
+- returns rows from two tables **only** where the `JOIN` condition is met
+- if the `JOIN` condition is not met, then nothing is returned from either table.
+
+### LEFT JOIN
+- Returns rows from two tables when the `JOIN` condition is met
+- If the `JOIN` condition is **not** met
+    - rows from the left (first) table are returned and
+    - NULL is returned instead of the rows from the second table
+
+For example an `inner join` will join each row in the doctor table to patient table but only where the doctor id is the same as the doctor id in the doctor table.
+
