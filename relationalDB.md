@@ -2,26 +2,6 @@
 
 Based on lecture notes, [the MySQL 8.0 Reference Manual](https://dev.mysql.com/doc/refman/8.0/en/), [W3schools SQL tutorial](https://www.w3schools.com/sql/sql_ref_mysql.asp) and [tutorialspoint.com DBMS tutorial](https://www.tutorialspoint.com/dbms/index.htm).
 
-# Part 1: Introduction to Applied Databases.
-
-- what is data
-- ever increasing data
-- what is a database
-- types of databases: Relational and Non-relational databases
-- Relational databases
-- comparison of relational database to spreadsheets
-- Database schema :
-    - logical schema
-    - physical schema
-- Database Management System (DBMS)
-- DBMS CRUD functions
-- DBMS functions
-- Examples of DBMS functions
-- Advantages and Disadvantages of DBMS.
-
-
-
-
 ## Data
 - **datum**: a single piece of information / fact / statistic
 - **data**: a series of facts or statistics
@@ -98,7 +78,7 @@ A DMBS is software for creating and managing databases.
 
 ***
 
-# Part 2: Relational Database Tables
+# Relational Database Tables
 
 
 ## SQL 
@@ -185,7 +165,7 @@ In In MySQL Workbench, `Server` menu > `Data Import` > `Import from Self-contain
 
 
 
-### Creating Tables using SQL
+## Creating Tables using SQL
 - [3.3.2 Creating a Table](https://dev.mysql.com/doc/refman/8.0/en/creating-tables.html)
 
 ```sql
@@ -336,17 +316,6 @@ See [ORDER BY optimization](https://dev.mysql.com/doc/refman/8.0/en/order-by-opt
 - `MONTH()` get month from date.
 
 
-### Example.
-Select name, age and birth where name doesn't start with A and born between 1st and 11th month, show in reverse name order
-
-```sql
-SELECT name, age, MONTHNAME(dob)    
-    FROM person
-    WHERE DAY(dob) BETWEEN 1 and 11
-    AND name NOT LIKE "A%"
-    ORDER BY name DESC;
-```
-
 
 ### DATE AND TIME FUNCTIONS
 [DATE and TIME FUNCTIONS](https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html)
@@ -360,7 +329,7 @@ SELECT name, age, MONTHNAME(dob)
 ***
 # 
 
-#  Part 3: MySQL FUNCTIONS AND PROCEDURES
+# MySQL FUNCTIONS AND PROCEDURES
 
 MySQL can also **manipulate data** before storing or retrieving  it.
 A  **function** is a piece of code that performs an operation and returns a result.
@@ -490,7 +459,7 @@ where the condition is the value to test.
 The return type of a CASE expression result is the aggregated type of all result values. See Section 12.4 [Control Flow Functions](https://dev.mysql.com/doc/refman/8.0/en/control-flow-functions.html).
 
 
-## MySQL Stored routines.
+# MySQL Stored routines.
 
 - A stored routine is a user-written code that extends the functionality of MySQL.
 - can be used to perform the same database operations across multiple client applications in different languages or on different platforms.
@@ -588,16 +557,16 @@ Functions can be used on relations. pass in the field from the table.
 Another type of stored routine is a stored procedure. A stored procedure is similar to function as it allow reuse of code, both stored functions and stored procedures can hide details where the logic can be encapsulated into the function and therefore doesn't need to be rewritten each time the same query arises.
 Both stored functions and stored procedures implement business logic as the code is updated in one place. 
 
-### Stored Function vs Stored Procedure.
+## Stored Function vs Stored Procedure.
 
-#### Functions
+### Functions
 - return a single value
 - only SELECT statement
 - cannot use stored procedures
 - does not support transactions 
 
 
-#### Procedures 
+### Procedures 
 - return 0 or more values,
 - and can manipulate the data using CRUD functions ( SELECT, INSERT, UPDATE and DELETE), 
 - procedures can use stored functions
@@ -608,13 +577,19 @@ Both stored functions and stored procedures implement business logic as the code
 
 See [CREATE PROCEDURE and CREATE FUNCTION Statements](https://dev.mysql.com/doc/refman/8.0/en/create-procedure.html)
 
-Both functions and procedures are used to store logic that is repeatedly use and avoids inconsistencies.
+- Both functions and procedures are used to store logic that is repeatedly use and avoids inconsistencies.
+- Instead of having to write out a potentially complex query, a procedure can be called. 
 
 
-Instead of having to write out a potentially complex query, a procedure can be called. 
-A cleverly designed procedure can help improve its use.
+- The delimiter must be changed before writing a function or procedure by entering `delimiter //` before writing the function. `//` after the `END` statement.  
+- The delimiter must be changed back to a semi-colon after the function is written by entering `delimiter ;`
+- `DETERMINISTIC` means the table is not changed.
+- use `select` statement with functions even when not applying to a table.
+
+
 
 ```sql
+delimiter //
 CREATE PROCEDURE  make_milage(mk VARCHAR(20), ml(INT(11))
 DETERMINISTIC
 BEGIN
@@ -623,7 +598,8 @@ BEGIN
     AND milage < ml
     ORDER BY milage;
 END
-
+//
+delimiter ;
 ```
 **To call the procedure:**
 
@@ -641,7 +617,7 @@ select routine_name, routine_type from information_schema.routines
     WHERE routine_name IN ("add2Nums","discount","make_milage");
 ```
 
-#### To see what is in a Function or a Procedure 
+### To see what is in a Function or a Procedure 
 
 ```sql
 SHOW CREATE FUNCTION <function-name>;
@@ -660,7 +636,7 @@ See Section 13.7.4.1 CREATE FUNCTION Syntax for User-Defined Functions:
 
 ***
 
-# Part 4: Normalisation
+# Normalisation
 
 
 # Normalisation - how to have many connected tables in a database,
@@ -702,6 +678,8 @@ Note although the `SELECT` clause is at the start of the query, it is really the
 
 - returns rows from two tables **only** where the `JOIN` condition is met
 - if the `JOIN` condition is not met, then nothing is returned from either table.
+- with an inner join, it does not matter which table you join to which
+- only join tables on the foreign keys.
 
 ### LEFT JOIN
 - Returns rows from two tables when the `JOIN` condition is met
@@ -711,3 +689,68 @@ Note although the `SELECT` clause is at the start of the query, it is really the
 
 For example an `inner join` will join each row in the doctor table to patient table but only where the doctor id is the same as the doctor id in the doctor table.
 
+- with a left join, the order of tables does matter as all rows from the first table will be returned and therefore if a different table is first, the results will be different.
+
+Normalisation is a more realistic database structure where there are many inter-related tables. A Normalised database reduces the potential for anomalies in the data.
+The `SHOW CREATE TABLE` command will show the foreign keys that link to other tables. Information which is stored over several tables can be retrieved by joining the tables using the left or inner join commands.
+
+
+***
+
+### SHOW CREATE TABLE
+The `show create table` shows the same information that the `describe table` command shows but with some more information. It also shows the exact code used for the creation of that table.
+
+`show create table` shows the **foreign key constraint** which is not shown in the `describe` command.
+With foreign key constraints we can only reference something if it already exists.
+
+`show create table salaries;`
+
+  PRIMARY KEY (`emp_no`,`from_date`),
+  KEY `emp_no` (`emp_no`),
+  CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
++--------------------------------------------------------
+
+### CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`)
+This foreign key constraint in the salaries table means that an employee number (emp_no) cannot be put into the salaries table if it doesn’t already exist in the employees table. This ensures the tables are consistent and preserves **referential integrity**. When referencing something, it must already exists.
+
+- The data is separated into different tables to **prevent deletion anomalies**. 
+- The constraint means you cannot add a new employee to salaries table unless their emp_no exists in the employees table.
+- The `Show create table` command shows these constraints better than the `describe tables` command.
+- You can also use the `reverse engineer` functionality in MySQLWorkbench to see if tables are connected. It will show if there is a **foreign key** coming from a table to see if they are connected.
+- A primary key can be a composite key
+
+- Note that the foreign keys do not have to have the exact same name. 
+
+- MySQLWorkbench > Database > ReverseEngineer to see a diagram.
+
+
+- it is best practice to use a short **alias** name for a table name when selecting data from more than one table. This is necessary when the tables have the same column name as otherwise mysql would not know which table is being referred to. Therefore always prefix the column name with the table it comes from. Define the abbreviation for the table the first time it is mentioned directly.
+
+- when joining tables, if a table is not joined on a foreign key as it should be and the query returns something, what is returned might not make any sense so always join on the foreign key.
+
+- The `select` clause goes at the start of the query to state which columns are to be returned.
+- the query really only starts after the `from` clause.
+- the alias can be used in the select clause even before the table it refers to is first mentioned.
+
+```sql
+select pt.*, dt.* from patient_table pt 
+inner join doctor_table dt
+on pt.doctorID = dt.doctorid; 
+```
+
+- If there is a field in both tables with the same name, then you need to use the prefix aliases for the tables so that mysql knows which table you are referring to.
+- use left join to show every row from the first table even if there is no associated entry in the second table.
+
+- to show all details of all doctors from one table with the details of their patients from the patients_table, use a left join as this will return all rows from the first table with a null value for rows in the second table where the condition is not met.
+- an inner join would omit the rows where the condition is not met
+
+- A table may not have a foreign key pointing out but there may be a foreign key pointing in from another table which can be used for joining tables.
+
+- (in some cases a left-join will return the same results as an inner join, depending on the data in the table)
+
+- if you only want to see rows from one table that have related data in another table use an `inner join`
+
+- if you want to see everything from one table, whether or not there is related data in another table use a left join. This will return  NULL value for rows from the second table where the conditions are not met.
+
+- a query with joins can be used in a stored function or procedure.
