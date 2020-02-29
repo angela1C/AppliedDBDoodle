@@ -27,21 +27,8 @@ Navigate to  `c:/Program Files/MySQL/MySQL Server 8.0 /bin` (windows)  or `cd /b
 
 
 ***
-####
 
-**Subject table** with 3 attributes
-- Name
-- Teacher
-- OnLeavingCert (0-false, 1-True)
-
-**Teacher table** with 5 attributes:
-- Tid
-- Name
-- Level
-- Experience
-- dob
-
-### `show tables;`
+#### `SHOW TABLES;`
 
  Tables_in_school 
 
@@ -50,7 +37,7 @@ Navigate to  `c:/Program Files/MySQL/MySQL Server 8.0 /bin` (windows)  or `cd /b
 
 2 rows in set (0.01 sec)
 
-### `DESCRIBE <table>`
+#### `DESCRIBE <table>`
 
 ```sql
 describe subject;
@@ -87,7 +74,7 @@ describe teacher;
 
 
 
-### `SELECT * FROM <table>;` 
+### `SELECT * FROM;` 
 
 - `select * from teacher` to show all  data in the teacher table
 - `select * from subject` to show all data in the subject table
@@ -109,12 +96,14 @@ SELECT * FROM teacher;
 
 
 
-### Select * from <table>;
+### Select * from
 
   
 ```sql
 SELECT * FROM subject;
 ```
+
+
 | Name      | Teacher      | OnLeavingCert |
  ---| ---| ---|
 | Biology   | Mr. Pasteur  |             1 |
@@ -145,7 +134,7 @@ gets all subjects on the leaving cert
 | Religion |
 
 
-### select * from <table> where condition;
+### select * from ... where condition;
 
 ```sql
 select name, experience 
@@ -159,6 +148,7 @@ where level ="L";
 | Ms. Dubois  |         22 |
 | Mr. Hawking |         40 |
 | Fr. Lynch   |         55 |
+
 
 This query shows the details of all teachers qualified to teach to leaving cert.
 
@@ -447,9 +437,8 @@ limit 5;
 select emp_no, first_name, upper(last_name) as last_name from employees limit 5;
 ```
 
-+--------+------------+-----------+
 | emp_no | first_name | last_name |
-+--------+------------+-----------+
+| --- | --- | --- |
 |  10001 | Georgi     | FACELLO   |
 |  10002 | Bezalel    | SIMMEL    |
 |  10003 | Parto      | BAMFORD   |
@@ -471,7 +460,7 @@ The **string function** [`char_length()`](https://dev.mysql.com/doc/refman/8.0/e
 
 
 | emp_no | birth_date | first_name | last_name | gender | hire_date  |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |---| 
 |  10080 | 1957-12-03 | Premal     | Baek      | M      | 1985-11-19 |
 |  10021 | 1960-02-20 | Ramzi      | Erde      | M      | 1988-02-10 |
 |  10079 | 1961-10-05 | Kshitij    | Gils      | F      | 1986-03-27 |
@@ -546,9 +535,9 @@ and hire_date >= "1988-09-1"
 and hire_date <="1991-02-28";
 ```
 
-+--------+------------+------------+------------+--------+------------+
+
 | emp_no | birth_date | first_name | last_name  | gender | hire_date  |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |---| 
 |  10006 | 1953-04-20 | Anneke     | Preusig    | F      | 1989-06-02 |
 |  10007 | 1957-05-23 | Tzvetan    | Zielinski  | F      | 1989-02-10 |
 |  10011 | 1953-11-07 | Mary       | Sluis      | F      | 1990-01-22 |
@@ -565,7 +554,7 @@ and hire_date <="1991-02-28";
 select * from person;
 ```
 | personID | name  | age  | sex  | dob        | isStudent |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |---|
 |        1 | John  |   24 | M    | 2000-01-01 |         1 |
 |        2 | Tom   |   65 | M    | 1958-03-11 |         0 |
 
@@ -767,7 +756,7 @@ from car;
 ```
 
 
----| --- | --- | --- | --- |---|
+---| --- | --- | --- | --- |---| --- |
 | 10-G-2334    | Toyota             | Corolla | Green  |  123389 |        1.3 | Medium |
 | 10-WH-17931  | Toyota             | Corolla | Silver |  130389 |        1.4 | Large  |
 | 11-MO-23431  | Toyota             | Corolla | Black  | 1234123 |        1.3 | Medium |
@@ -1078,8 +1067,8 @@ Use `drop procedure  <procedure name>` to delete a procedure and create it again
 once the procedure is written, change the delimiter back to ;. Then the procedure can be called from memory to be used.
 `call <procedure name>(arguments)`
 
-
-#### Normalisation
+***
+### Normalisation
 ```sql
 describe doctor_table;
 ```
@@ -1106,7 +1095,7 @@ describe patient_table;
 show create table patient_table
 ```
 
-patient_table | CREATE TABLE `patient_table` (
+CREATE TABLE `patient_table` (
   `ppsn` varchar(10) NOT NULL,
   `first_name` varchar(50) DEFAULT NULL,
   `surname` varchar(50) DEFAULT NULL,
@@ -1121,7 +1110,7 @@ patient_table | CREATE TABLE `patient_table` (
 show create table doctor_table;
 ```
 
-doctor_table | CREATE TABLE `doctor_table` (
+CREATE TABLE `doctor_table` (
   `doctorID` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `phone` int(11) DEFAULT NULL,
@@ -1132,17 +1121,21 @@ doctor_table | CREATE TABLE `doctor_table` (
 The doctor id in the patient table is a foreign key referring the doctorid in the doctor table.
 Therefore any integers we put in as doctor id in the patient table must already exist in the doctor table doctor id column.
 
-
+```SQL
 select * from doctor_table;
-+----------+------------+-------+
+```
+
+
 | doctorID | name       | phone |
 --- | --- | --- |
 |      100 | Dr. Jones  | 12345 |
 |      101 | Dr. Murphy | 88335 |
 |      102 | Dr. Rice   | 64727 |
 
+```SQL
 select * from patient_table;
-+----------+------------+----------+-----------+----------+
+```
+
 | ppsn     | first_name | surname  | address   | doctorID |
 --- | --- | --- | ---| --- |
 | 2344234S | Mary       | Burke    | Galway    |     NULL |
@@ -1318,17 +1311,20 @@ returns all patients from the patient_table with details of doctor they are atte
 show create table manufacturer;
 ```
 
-manufacturer CREATE TABLE `manufacturer` (
+```SQL
+manufacturer CREATE TABLE `manufacturer` (  
     `manu_code` varchar(3) NOT NULL,
     `manu_name` varchar(200) NOT NULL,
     `manu_details` varchar(400) DEFAULT NULL,
     PRIMARY KEY (`manu_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 
+```
 
 ```sql
 show create table vehicles;
 ```
 
+```SQL
 vehicle CREATE TABLE `vehicle` (
   `reg` varchar(20) NOT NULL,
   `manu_code` varchar(3) NOT NULL,
@@ -1337,9 +1333,10 @@ vehicle CREATE TABLE `vehicle` (
   `colour` varchar(20) NOT NULL,
   `fuel` enum('petrol','diesel') DEFAULT NULL,
   PRIMARY KEY (`reg`),
-  **KEY `vehicle_ibfk_1` (`manu_code`),**
-  **CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)**
-) ENGINE=InnoDB DEFAULT CHARSET=latin1 |
+  KEY `vehicle_ibfk_1` (`manu_code`),
+  CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 
+```
 
 ### Relationships between tables through foreign key:
 
@@ -1431,9 +1428,12 @@ This query includes a column called “cost” which has the value 1.45 if the f
 ### JOINING TABLES TO GET DATA FROM MULTIPLE TABLES
 
 
-The `vehicle` table has a foreign key `manu_code` referencing the `manu_code` field in the `manafacturer` table.\
+The `vehicle` table has a foreign key `manu_code` referencing the `manu_code` field in the `manafacturer` table.
+```sql
  **KEY `vehicle_ibfk_1` (`manu_code`),**
   **CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)**
+```
+
 
 ### INNER JOIN
 
@@ -1516,9 +1516,11 @@ This query will return less rows that the same query using a left join as it exc
 
 The `show create table` on vehicles shows that the vehicles table has a foreign key referencing the manufacturer table. 
 
-
+```sql
 KEY `vehicle_ibfk_1` (`manu_code`),
-  **CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)**
+  CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)
+```
+
 
 The manufacturer table has no foreign key constraint.
 
@@ -1593,13 +1595,14 @@ describe bus
 SHOW create table bus
 ```
 
+```sql
 BUS   | CREATE TABLE `BUS` (
   `reg` varchar(15) NOT NULL,
   `maxPassengers` int(11) DEFAULT NULL,
   `fuel` enum('Diesel','Petrol','Electric') DEFAULT 'Diesel',
   PRIMARY KEY (`reg`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
-
+```
 
 ```sql
 describe driver;
@@ -1616,7 +1619,8 @@ describe driver;
 show create table driver
 ```
 
-driver | CREATE TABLE `driver` (
+```sql
+CREATE TABLE `driver` (
   `licenceNo` varchar(20) NOT NULL,
   `name` varchar(30) DEFAULT NULL,
   `busReg` varchar(15) DEFAULT NULL,
@@ -1624,7 +1628,7 @@ driver | CREATE TABLE `driver` (
   KEY `busReg` (`busReg`),
   **CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE CASCADE**
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
-
+```
 
 `describe car;`
 
@@ -1641,7 +1645,8 @@ driver | CREATE TABLE `driver` (
 show create table car;
 ```
 
-car   | CREATE TABLE `car` (
+```sql
+CREATE TABLE `car` (
   `registration` varchar(15) NOT NULL,
   `make` varchar(20) DEFAULT NULL,
   `model` varchar(20) DEFAULT NULL,
@@ -1650,6 +1655,8 @@ car   | CREATE TABLE `car` (
   `engineSize` float(2,1) DEFAULT NULL,
   PRIMARY KEY (`registration`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+```
+
 
 ```sql
 describe person
@@ -1881,7 +1888,7 @@ WHERE mileage > 150000 AND (COLOUR = "Green" OR COLOUR ="SILVER");
 | 05-MO-17931  | Toyota      | Highlander | Green  |  253789 |        1.6 |
 | 132-G-9923   | Ford Motors | Ka         | Silver |  325883 |        1.0 |
 | 99-G-300     | Toyota      | Corolla    | Green  |  599339 |        1.3 |
-+--------------+-------------+------------+--------+---------+------------+
+
 
 
 Delete cars coloured green or silver  whose mileage is greater than 150000;
@@ -1901,12 +1908,15 @@ select * from bus;
 | 162-D-3433 |           120 | Electric |
 | 191-G-123  |            56 | Diesel   |
 
-4 rows in set (0.00 sec)
 
-mysql> select * from driver;
-| --- | --- | --- | --- |
+
+```sql
+select * from driver;
+```
+
+
 | licenceNo | name | age  | busReg     |
-+-----------+------+------+------------+
+| --- | --- | --- | --- |
 | L23423    | John |   32 | 12-G-1323  |
 | X98983    | Tom  |   57 | 161-D-1323 |
 
@@ -1981,7 +1991,7 @@ This query finds the age of the youngest driver(s) and returns the results to th
 | --- | --- | --- |
 | 12-G-1323 |            34 | Petrol 
 
-### subQuery or Inner Join
+### Sub-query or Inner Join
 
 ```sql
 select licenceNo from driver
@@ -1999,7 +2009,7 @@ licenceno |
 ***
 ### Sub-query across two tables.
 
-
+```sql
 CREATE TABLE `salaries` (
   `emp_no` int(11) NOT NULL,
   `salary` int(11) NOT NULL,
@@ -2007,13 +2017,17 @@ CREATE TABLE `salaries` (
   `to_date` date NOT NULL,
   PRIMARY KEY (`emp_no`,`from_date`),
   KEY `emp_no` (`emp_no`),
-  **CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE**
+CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+```
+
+
 
 ```sql
 show create table employees;
 ```
 
+```sql
 CREATE TABLE `employees` (
   `emp_no` int(11) NOT NULL,
   `birth_date` date NOT NULL,
@@ -2023,7 +2037,7 @@ CREATE TABLE `employees` (
   `hire_date` date NOT NULL,
   PRIMARY KEY (`emp_no`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
-
+```
 
 ```sql
 select e.emp_no, first_name, last_name
@@ -2191,8 +2205,8 @@ Field      | Type          | Null | Key | Default | Extra |
 | dept_no   | varchar(10) | YES  | MUL | NULL    |      
 
 
-
-salaries | CREATE TABLE `salaries` (
+```sql
+CREATE TABLE `salaries` (
   `emp_no` int(11) NOT NULL,
   `salary` int(11) NOT NULL,
   `from_date` date NOT NULL,
@@ -2201,9 +2215,16 @@ salaries | CREATE TABLE `salaries` (
   PRIMARY KEY (`emp_no`,`from_date`),
   KEY `emp_no` (`emp_no`),
   KEY `dept_no` (`dept_no`),
-  **CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE**,
-  **CONSTRAINT `salaries_ibfk_2` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`) ON DELETE CASCADE**
+  CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE,
+  CONSTRAINT `salaries_ibfk_2` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
+```
+
+
+- **CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE**,
+- **CONSTRAINT `salaries_ibfk_2` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`) ON DELETE CASCADE**
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
 
 ```sql
 select distinct e.emp_no, e.first_name, e.last_name, d.name 
