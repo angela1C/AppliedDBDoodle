@@ -244,6 +244,23 @@ This chapter also covers default values for data types.
 
 - `DESCRIBE <table>;'`
 - 
+
+[Describe](https://dev.mysql.com/doc/refman/5.7/en/show-columns.html) describes the table structure. The `show columns` statement provides information similar to the `describe` statement. See section [Show Columns statement](https://dev.mysql.com/doc/refman/5.7/en/show-columns.html). 
+
+- **Field**: the column name
+- **Type**: the column data type
+- **Null**: yes or no
+- **Key**: whether the column is indexed.
+    - PRI: if the column is a primary key or one of the columns in a mult-index  primary key
+    - UNI: If the column is the first column of a UNIQUE index. (A UNIQUE index permits multiple NULL values as shown in the Null field.)
+    - MUL: if the column is the first column of a nonunique index in which multiple occurrences of a given value are permitted within the column
+- **Default**: The default value for the column. This is NULL if the column has an explicit default of NULL, or if the column definition includes no DEFAULT clause.
+- **Extra**: 
+    - often blank if no additional information about a given column
+    - auto_increment for columns that have the AUTO_INCREMENT attribute.
+    - on update CURRENT_TIMESTAMP for TIMESTAMP or DATETIME columns that have the ON UPDATE CURRENT_TIMESTAMP attribute
+
+
 ## Getting data from a Table: 
 [section 13.2.10 SELECT statement](https://dev.mysql.com/doc/refman/8.0/en/select.html)
 
@@ -418,7 +435,7 @@ The `GROUP BY` statement is often used with aggregate functions to group the res
 Also STD, VARIANCE and more. 
 See section 12.20.1  (https://dev.mysql.com/doc/refman/8.0/en/group-by-functions.html)
 
-
+*** 
 ## MYSQL INFORMATION FUNCTIONS
 
 See [Section 12.15 Information Functions](https://dev.mysql.com/doc/refman/8.0/en/information-functions.html)
@@ -458,6 +475,8 @@ where the condition is the value to test.
 `CASE WHEN [condition] THEN result [WHEN [condition] THEN result ...] [ELSE result] END`
 
 The return type of a CASE expression result is the aggregated type of all result values. See Section 12.4 [Control Flow Functions](https://dev.mysql.com/doc/refman/8.0/en/control-flow-functions.html).
+
+*** 
 
 
 # MySQL Stored routines.
@@ -765,6 +784,7 @@ on pt.doctorID = dt.doctorid;
 
 
 ***
+
 # CRUD (Create, Insert, Read, Update Delete)
 
 ## INSERT
@@ -794,7 +814,6 @@ If inserting a value for all fields, then the values must be supplied in the cor
 - an error  (**Cannot add or update a child row: a foreign key constraint fails**) will result if you try to insert a row with a foreign key in a table if the value for the foreign key does not exist in the other table. (Cannot add a bus registration number into the driver table if the bus reg doesn't exist on the bus table.)
 
 
-### Example
 ```sql
  describe person;
  ```

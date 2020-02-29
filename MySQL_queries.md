@@ -755,7 +755,7 @@ END as size
 from car;
 ```
 
-
+ registration | make        | model   | colour | mileage | engineSize | size
 ---| --- | --- | --- | --- |---| --- |
 | 10-G-2334    | Toyota             | Corolla | Green  |  123389 |        1.3 | Medium |
 | 10-WH-17931  | Toyota             | Corolla | Silver |  130389 |        1.4 | Large  |
@@ -800,6 +800,34 @@ case
 | Mary |         1 |   13 | ordinary student |
 | Alan |         1 |   13 | ordinary student |
 | Pat  |         0 |   30 | Not              |
+
+#### CASE WHEN
+
+```sql
+select *, 
+case 
+    when age < 20 then "under20" 
+    when age < 30 then "under30" 
+    when age < 40 then "under40" 
+    else "over40" 
+    end as "age-cat" 
+    from person;
+```
+(use the correct order when writing the case when.)
+
+personID | name     | age  | sex  | dob        | isStudent | age-cat |
+| --- | --- | --- | --- | --- | --- | --- |
+|        2 | Mr.Tom   |   66 | M    | 1958-03-11 |         0 | over40  |
+|        3 | Ms.Mary  |   14 | F    | 2005-04-11 |         1 | under20 |
+|        4 | Mr.Alan  |   14 | M    | 2005-11-21 |         1 | under20 |
+|        5 | Mr.Pat   |   31 | M    | 1993-03-17 |         0 | under40 |
+|        6 | Mr.Shane |   42 | M    | 1988-07-21 |         0 | over40  |
+|        7 | Mr.Shane |   16 | M    | 2003-06-01 |         1 | under20 |
+|        8 | Ms.Alice |   26 | F    | 1999-03-01 |         1 | under30 |
+|        9 | Ms.Pat   |   32 | F    | 1988-04-15 |         0 | under40 |
+|       10 | Johan    |   34 | M    | NULL       |      NULL | under40 |
+|       11 | Jonh     |   23 | M    | NULL       |         1 | under30 
+
 
 
 
@@ -1094,7 +1122,7 @@ describe patient_table;
 ```sql
 show create table patient_table
 ```
-
+```sql
 CREATE TABLE `patient_table` (
   `ppsn` varchar(10) NOT NULL,
   `first_name` varchar(50) DEFAULT NULL,
@@ -1105,18 +1133,22 @@ CREATE TABLE `patient_table` (
   KEY `doctorID` (`doctorID`),
   CONSTRAINT `patient_table_ibfk_1` FOREIGN KEY (`doctorID`) REFERENCES `doctor_table` (`doctorid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 
+```
+
+
 
 ```sql
 show create table doctor_table;
 ```
 
+```sql
 CREATE TABLE `doctor_table` (
   `doctorID` int(11) NOT NULL,
   `name` varchar(50) DEFAULT NULL,
   `phone` int(11) DEFAULT NULL,
   PRIMARY KEY (`doctorID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1
-
+```
 
 The doctor id in the patient table is a foreign key referring the doctorid in the doctor table.
 Therefore any integers we put in as doctor id in the patient table must already exist in the doctor table doctor id column.
@@ -1674,7 +1706,8 @@ Field     | Type          | Null | Key | Default | Extra          |
 show create table person
 ```
 
-person | CREATE TABLE `person` (
+```sql
+CREATE TABLE `person` (
   `personID` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL,
   `age` int(11) DEFAULT NULL,
@@ -1682,7 +1715,8 @@ person | CREATE TABLE `person` (
   `dob` date DEFAULT NULL,
   `isStudent` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`personID`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci 
+```
 
 ***
 
@@ -1936,7 +1970,7 @@ where age=
 The result of the inner query gets replaced as the argument in the outer query. In this way the query is written dynamically instead of hard-coding in a value. Therefore the same query can be used even if the results of the inner query has changed.
 
 
-### SubQuery on one table
+### Sub-query on one table
 
 Can use a sub-query here instead of writing each part of the query separately and then passing the actual values to another query.
 
@@ -1957,7 +1991,8 @@ where age=
 The result of the inner query gets replaced as the argument in the outer query. This is better than running a query first to get the oldest driver's age and then writing another query where age = this value. This query shows the driver details for the oldest driver.
 
 
-### SubQuery across more than one table.
+### Sub-query across more than one table.
+
 ### IN, MIN, MAX
 Show all details of the bus driven by the youngest driver. When using minimum or maximum, can use IN instead of `=` in case there are more than one row with the minimum or maximum values for that column.
 
@@ -2089,6 +2124,9 @@ CONSTAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus`(`reg`) ON DELE
 
 - The Reverse engineer EER diagram will show the connection from the `busReg` column (under Indexes)  with arrow pointing to the `reg` field in the `bus` table.
 
+***
+  
+  
 
 ## SUB-QUERIES
 
