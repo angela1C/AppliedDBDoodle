@@ -156,7 +156,7 @@ One function of a DBMS is to backup a database to a file. A database that was pr
 
 In In MySQL Workbench, `Server` menu > `Data Import` > `Import from Self-contained file` and browse to the location.
 
-- `DROP <database>` to remove a database.
+- `DROP database <database>` to remove a database.
 
 - `USE <database>` to actually use a database so that any commands are sent to this database.
 
@@ -211,6 +211,8 @@ See [Section 11.3.1 for String Data Type Syntax](https://dev.mysql.com/doc/refma
 - The BLOB and TEXT Types
 - The ENUM Type
 - The SET Type
+
+[The ENUM type](https://dev.mysql.com/doc/refman/8.0/en/enum.html) is a string object with a value chosen from a list of permitted values that are enumerated explicitly in the column specification at table creation time.
 
 
 Also covered in chapter 11 are [Spatial Data Types](https://dev.mysql.com/doc/refman/8.0/en/spatial-types.html) and  [JSON data types](https://dev.mysql.com/doc/refman/8.0/en/json.html).
@@ -327,7 +329,6 @@ See [ORDER BY optimization](https://dev.mysql.com/doc/refman/8.0/en/order-by-opt
 `MONTHNAME();`
 
 ***
-# 
 
 # MySQL FUNCTIONS AND PROCEDURES
 
@@ -681,6 +682,13 @@ Note although the `SELECT` clause is at the start of the query, it is really the
 - with an inner join, it does not matter which table you join to which
 - only join tables on the foreign keys.
 
+- to get data from two tables that are not directly joined to each other, look for the foreign keys in the database. Then you can join tables that are not directly connected.
+
+- tables can be joined either way on the foreign key constraint but always join tables on the keys.
+
+
+
+
 ### LEFT JOIN
 - Returns rows from two tables when the `JOIN` condition is met
 - If the `JOIN` condition is **not** met
@@ -754,3 +762,219 @@ on pt.doctorID = dt.doctorid;
 - if you want to see everything from one table, whether or not there is related data in another table use a left join. This will return  NULL value for rows from the second table where the conditions are not met.
 
 - a query with joins can be used in a stored function or procedure.
+
+
+***
+# CRUD (Create, Insert, Read, Update Delete)
+
+## INSERT
+
+See [Section 13.2.6: INSERT](https://dev.mysql.com/doc/refman/8.0/en/insert.html)
+`INSERT` inserts new rows into an existing table.
+Inserting into a table requires the INSERT privilege for the table
+
+`INSERT INTO <table> VALUES (value1, value2, valueN);`
+
+If inserting a value for all fields, then the values must be supplied in the correct order of the columns in the table.
+
+`INSERT INTO <table> (column1, column2, column) VALUES (value1, value2, valueN);`
+
+- If you are inserting data into a table where not all fields are being supplied, then the fields and corresponding values must be supplied.  Default values are given to the missing columns.
+
+- Provide a parenthesized list of comma-separated column names following the table name. The number of columns in the source table must match the number of columns to be inserted.
+
+- The values entered must be in the correct order.
+- A primary key may be set to auto-increment.
+- There may be default values for some fields.
+- If there are default values for fields not being supplied with a value, this will be taken care of by MySQL. 
+
+- The `DESCRIBE` function will show the order of the columns in the table as well as details of all columns, including the type of dat for each field, the default values if any, whether a primary key is auto_increment, whether NULL values are allowed or not.
+- However just because a default is set to NULL does not mean the missing field will be updated. The NULL column shows whether null is allowed or not. If not the NULL field for this column will be set to NO, even where the default value is NULL. 
+
+- an error  (**Cannot add or update a child row: a foreign key constraint fails**) will result if you try to insert a row with a foreign key in a table if the value for the foreign key does not exist in the other table. (Cannot add a bus registration number into the driver table if the bus reg doesn't exist on the bus table.)
+
+
+### Example
+```sql
+ describe person;
+ ```
+
+| Field     | Type          | Null | Key | Default | Extra          |
+| --- | --- | --- | --- | --- | --- | --- |
+| personID  | int(11)       | NO   | PRI | NULL    | auto_increment |
+| name      | varchar(20)   | NO   |     | NULL    |                |
+| age       | int(11)       | YES  |     | NULL    |                |
+| sex       | enum('M','F') | YES  |     | M       |                |
+| dob       | date          | YES  |     | NULL    |                |
+| isStudent | tinyint(1)    | YES  |     | NULL    |                |
+
+For this table, a value must always be supplied for the name field as Null is set to NO.
+
+The primary key (personID) is set to auto_increment.
+
+
+
+## UPDATE
+
+### UPDATE ... SET ...
+See [section 13.2.13 UPDATE statement](https://dev.mysql.com/doc/refman/8.0/en/update.html)
+Update mondifies rows in a table.
+
+```sql
+UPDATE <table> SET column1 = value1, columnN, valueN;
+```
+
+```sql
+UPDATE <table> SET column1 = value1, columnN, valueN 
+WHERE condition;
+```
+
+- `UPDATE` updates columns of existing rows in the named table with new values. The `SET` clause indicates which columns to modify and the values they should be given.
+- Each value can be given as an expression, or the keyword DEFAULT to set a column explicitly to its default value. 
+- Without a `WHERE` clause, all rows are updated.
+- A `WHERE` clause specifies the conditions that identify which rows to update.  
+- The `ORDER BY` the order in which the rows should be updated.
+- The `LIMIT` clause places a limit on the number of rows that can be updated.
+
+
+
+
+```sql
+update person
+set age =30
+where personID =9;
+``` 
+
+Without the `WHERE` clause, all rows would be updated with the new value for the age field.
+
+
+### Functions and operators can be applied when updating
+```sql
+update person set age = age +1;
+```
+This updates the age fields in all row to the current age plus 1.
+
+### UPDATING based on IF conditions
+
+```sql
+UPDATE person SET name=concat(if(sex="M","Mr.","Ms."),name);
+```
+
+### UPDATING based on CASE
+
+- a `CASE` allows many updates in one statement instead of several smaller queries.
+
+Sometimes it is better to break the query into smaller queries but often better to use a single query. `case` allows you to do updates in one go instead of doing smaller queries.
+
+```sql
+update person
+set age = 
+case
+    when age is null then 18
+    else age +1
+end;
+```
+
+
+
+## DELETE
+
+See [section 13.2.2 DELETE](https://dev.mysql.com/doc/refman/8.0/en/delete.html).
+
+- DELETE removes rows from a table.
+- The DELETE statement deletes rows and returns the number of deleted rows.
+- A DELETE statement can start with a WITH clause 
+- DELETE privilege on a table are needed to delete rows from it
+- Even if all the rows are deleted, the table still exists.
+- A row can be deleted if no other table is referencing the field.
+- a row cannot be deleted if a field is referenced elsewhere.
+
+
+```sql
+DELETE FROM <table>;
+```
+
+```sql
+DELETE FROM <table>; 
+WHERE condition;
+```
+
+`DELETE FROM <TABLE>;` without a where clause would delete all rows.
+
+`delete from person where sex="M" and isStudent AND age >20;` would only delete rows matching the where condition.
+
+### SHOW CREATE TABLE
+
+The `SHOW CREATE TABLE` command will show if there are any restrictions on delete.
+
+`CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE CASCADE`
+
+ON DELETE CASCADE
+
+` CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE SET NULL`
+ON DELETE SET NULL
+
+`CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 |`
+
+Note that the default constraint is `ON DELETE RESTRICT` if it doesn't say  `ON DELETE CASCADE` or `ON DELETE SET NULL`.
+
+### REFERENTIAL INTEGRITY
+
+- The `bus` table does not have a foreign key, but you cannot delete a row from this table if it is referenced in another table which links to it by a foreign key. The `driver` table has a foreign key that references the `bus` table.
+
+- The delete command will result in an error such as `Cannot delete or update a parent row: a foreign key constraint fails ...` as you cannot associate a driver with a bus if the bus is not in the bus table already. 
+
+- You cannot insert a row with a busReg into the driver table if the bus does not already exist on the bus table. 
+This will result in an error "Cannot add or update a child row: a foreign key constraint fails"
+
+
+If a table's foreign key references a column in another table, and the foreign key constraint is set to `ON DELETE CASCADE`, this means that if a row in the first table is deleted and the value of the field is used in the other table, then this row should also be deleted from the other table.
+
+`ON DELETE RESTRICT` means that if a row in the first table is deleted and the value of the  field is used in the other table, that this row should **not** be deleted from the table as the other table is restricting the delete.
+
+`ON DELETE SET NULL` means that if a row in the table is deleted and the value of the  field is used in the other table, that the foreign in the other table which was referencing the field to be deleted from the other table should be set to NULL, so now the field is no longer referenced and therefore can be deleted from the bus table.
+
+If deleting a row from a table which isn't referenced by any other table, the row will simply be deleted.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+### How are tables in a database related?
+
+The `SHOW CREATE TABlE` query will show any foreign keys that exist in a table. While one table may not contain any foreign keys itself, another table may have a foreign key which points in to that table.
+
+Can also use the Reverse Engineer EER diagram which will show any connections between tables and the direction. 
+
+
+## SubQueries
+- another way to read data from a table
+- Instead of taking the result of a query and putting the actual values into another query, instead use a subquery that returns the value to the outer query. 
+- whenever data comes from more than one table, the tables must be joined somehow on the foreign key.
+- another way to get the information from tables is using a sub-query which is a query within a query.
+- subqueries can be used instead of doing an inner join in some cases.
+- As brackets take precedence over other operators, a query within brackets will be done first and then the result returned from the subquery used in the outer query. 
+- It is better to do a query dynamically like this instead of hardcoding values into the query. Therefore the query can be used again even if the data has changed.
+- The result of the inner query gets replaced as the argument in the outer query
+- Sometimes a subquery is better than using an inner join
+- there can be more than one query nested within another query. The innermost query is run first. The subquery gets replaced with the results of the subquery and so on out to the outer most query.
+- The result of the inner query gets replaced as the argument in the outer query.
+

@@ -27,8 +27,7 @@ Navigate to  `c:/Program Files/MySQL/MySQL Server 8.0 /bin` (windows)  or `cd /b
 
 
 ***
-##### School database.
-The `school.sql` is a database with two tables `subject` and `teacher` .
+####
 
 **Subject table** with 3 attributes
 - Name
@@ -107,11 +106,12 @@ SELECT * FROM teacher;
 |   6 | Mr. Picasso  | J     |         42 | 1939-03-30 |
 |   7 | Fr. Lynch    | L     |         55 | 1939-03-31 |
 
-7 rows in set (0.01 sec)
 
 
-### SELECT * FROM <table>;
 
+### Select * from <table>;
+
+  
 ```sql
 SELECT * FROM subject;
 ```
@@ -128,12 +128,13 @@ SELECT * FROM subject;
 
 ### WHERE
 
-##### Show all names of all subjects that are on the leaving cert.
 ```sql
 select name 
 from subject 
 where onleavingcert =1;
 ```
+gets all subjects on the leaving cert
+
 
 | name     |
  ---| 
@@ -143,11 +144,9 @@ where onleavingcert =1;
 | Maths    |
 | Religion |
 
-5 rows in set (0.00 sec)
 
 ### select * from <table> where condition;
 
-##### Show all name and experience of all teachers who are qualified to teach to Leaving Cert.
 ```sql
 select name, experience 
 from teacher 
@@ -161,14 +160,16 @@ where level ="L";
 | Mr. Hawking |         40 |
 | Fr. Lynch   |         55 |
 
-4 rows in set (0.01 sec)
+This query shows the details of all teachers qualified to teach to leaving cert.
 
-##### Show all details of all subjects who are taught by teachers whose title is not “Mr.” 
+#### SELECT ... FROM ... WHERE .. NOT LIKE " ";
 
 ```sql
 select * from subject 
 where teacher NOT LIKE "Mr.%";
 ```
+
+Shows details of all subjects taught by teachers whose title is not "Mr."
 
 | Name     | Teacher    | OnLeavingCert |
  ---| ---| ---| 
@@ -176,21 +177,23 @@ where teacher NOT LIKE "Mr.%";
 | Religion | Fr. Lynch  |             1 |
 | Spelling | Ms. Smith  |             0 |
 
-### SELECT ... FROM ... WHERE ... AND ...
+#### SELECT ... FROM ... WHERE ... AND ...
 
-##### Show all details of all teachers who were born in January, February or March, and who can teach as far as Junior Cert only
 
 ```sql
 select * from teacher
 where month(dob) IN(1,2,3) 
 AND level = "J";
 ```
+This shows all teachers born in the specified months and that can teach to junior cert only.
+
 | tid | Name        | level | experience | dob        |
  ---| ---| ---| ---| ---| 
 |   3 | Ms. Smith   | J     |          4 | 1980-03-23 |
 |   6 | Mr. Picasso | J     |         42 | 1939-03-30 |
 
-gives the same results as
+which gives the same results as:
+
 ```sql
 select * from teacher 
 where month(dob) between 1 and 3 
@@ -198,13 +201,13 @@ AND level = "J";
 ```
 ### DISTINCT
 
-#### SELECT DISTINCT FROM
-Show all **unique** month names that teachers were born in
+#### SELECT DISTINCT ... FROM ...
 
 ```sql
 select distinct monthname(dob)
 from teacher;
 ```
+Shows all **unique** month names that teachers were born in
 
 | monthname(dob) |
 --- |
@@ -214,13 +217,13 @@ from teacher;
 | November       |
 
 ### ORDER BY
-### SELECT ... FROM ... ORDER BY
-#####  Show all details of all teachers, sorted by first by experience, then level. 
+#### SELECT ... FROM ... ORDER BY...
 
 ```sql
 select * from teacher
 order by experience desc, level;
 ```
+Shows all details of teachers sorted by experience first, then level.
 
 | tid | Name         | level | experience | dob        |
  ---| ---| ---| ---| ---| 
@@ -232,15 +235,14 @@ order by experience desc, level;
 |   1 | Mr. Pasteur  | L     |         15 | 1960-02-02 |
 |   3 | Ms. Smith    | J     |          4 | 1980-03-23 |
 
-### SELECT ... FROM ... WHERE... ORDER BY...;
-
-##### Show all details of all subjects whose 3rd or 4th letter is “l”. Sort them by name. 
+#### SELECT ... FROM ... WHERE... ORDER BY...;
 
 ```sql
 select * from subject 
 where name like "__l%" or name like"___l%" 
 order by name;
 ```
+Shows all details of all subjects whose 3rd or 4th letter is “l”, sorted by name. 
 
 | Name      | Teacher      | OnLeavingCert |
  ---| ---| ---| 
@@ -250,15 +252,16 @@ order by name;
 | Religion  | Fr. Lynch    |             1 |
 | Spelling  | Ms. Smith    |             0 |
 
-5 rows in set (0.00 sec)
 
-##### Show the name of all teachers who have 10, 15, 20, 25, 30, 35, 40, 45, 50, 55 or 60 years experience. Sort from youngest to oldest. 
+### SELECT ... FROM ... WHERE ... IN ( , , , ) ORDER BY ... ;
 
 ```sql
 select * from teacher 
 where experience in (10,15,20,25,30,35,40,45,50,55,60)
 order by dob;
 ```
+Shows the names of all teachers with the mentioned number of years experience, sorted from youngest to oldest.
+
 
 | tid | Name         | level | experience | dob        |
  ---| ---| ---| ---| ---| 
@@ -267,12 +270,8 @@ order by dob;
 |   4 | Mr. Hawking  | L     |         40 | 1951-02-19 |
 |   1 | Mr. Pasteur  | L     |         15 | 1960-02-02 |
 
-4 rows in set (0.00 sec)
 
 ***
-
-
-##### The Car table.
 
 ```sql
 select * from car;
@@ -289,12 +288,13 @@ select * from car;
 | 171-MO-12533 | Ford Motor Company | Fiesta  | Black  |   25882 |        1.0 |
 
 
-### SELECT ... FROM ... WHERE ... AND ( ...OR...);
+#### SELECT ... FROM ... WHERE ... AND ( ...OR...);
 
-##### Show the registration and mileage for all cars where the mileage is greater than 130000 and the colour is silver or black.
+
 
 ```sql
-select registration, mileage from car where mileage > 130000 AND (colour= "Silver" or colour ="Black");
+select registration, mileage from car 
+where mileage > 130000 AND (colour= "Silver" or colour ="Black");
 ```
 
 | registration | mileage |
@@ -302,6 +302,7 @@ select registration, mileage from car where mileage > 130000 AND (colour= "Silve
 | 10-WH-17931  |  130389 |
 | 11-MO-23431  | 1234123 |
 
+Shows details for all cars  with mileage greater than 130000 and colour is silver or black.
 
 ```sql
  select * from person;
@@ -316,14 +317,14 @@ select registration, mileage from car where mileage > 130000 AND (colour= "Silve
 
 ### AVERAGE
 
-### SELECT ... AVG() FROM ... WHERE ... AND ...;
+#### SELECT ... AVG() FROM ... WHERE ... AND ...;
 
 Apply the average to the rows selected where the conditions are met.
 
 ```SQL
 SELECT ROUND(AVG(AGE)) FROM PERSON WHERE SEX ="M" AND AGE <=24;
 ```
-+-----------------+
+
 | ROUND(AVG(AGE)) |
 --- |
 |              17 |
@@ -332,20 +333,13 @@ SELECT ROUND(AVG(AGE)) FROM PERSON WHERE SEX ="M" AND AGE <=24;
 SELECT ROUND(AVG(AGE)) FROM PERSON WHERE SEX ="M" AND AGE >=24;
 ```
 
-+-----------------+
+
 | ROUND(AVG(AGE)) |
 --- |
 |              40 |
 
 
-
-
-
-
-
-### SELECT ... FROM ... WHERE ... LIKE (' ');
-
-##### Show all details for all persons with exactly 3 letters in their name.
+#### SELECT ... FROM ... WHERE ... LIKE (' ');
 
 ```sql
 select * from person where name like ('___');
@@ -357,9 +351,9 @@ select * from person where name like ('___');
 |        5 | Pat  |   30 | M    | 1993-03-17 |         0 |
 |        9 | Pat  |   38 | F    | 1988-04-15 |         0 |
 
-### SELECT DISTINCT ... FROM ...;
+Shows details for persons with exactly 3 letters in their name.
 
-##### Show the distinct makes of car
+#### SELECT DISTINCT ... FROM ...;
 
 
 ```sql
@@ -370,8 +364,7 @@ select distinct(make) from car;
 | Toyota             |
 | Ford Motor Company |
 
-### SELECT ... FROM ... WHERE ... LIKE " " ORDER BY ...;
-##### Show all details of all cars registered in Galway. display the results from lowest to highest mileage
+#### SELECT ... FROM ... WHERE ... LIKE " " ORDER BY ...;
 
 
 ```sql
@@ -380,15 +373,17 @@ where registration like "%-G-%"
 order by mileage asc;
 
 ```
+Shows all cars registered in Galway, sorted by mileage in ascending order
+
 
  registration | make   | model   | colour | mileage | engineSize |
  ---| ---| ---| ---| ---| --|
 | 171-G-39532  | Toyota | Corolla | Silver |   55882 |        1.3 |
 | 10-G-2334    | Toyota | Corolla | Green  |  123389 |        1.3 |
 
-### SELECT ... FROM ... WHERE ... NOT IN .. ORDER BY ... LIMIT;
+#### SELECT ... FROM ... WHERE ... NOT IN .. ORDER BY ... LIMIT;
 
-##### Show all details of all people who were not born in Jan, Feb or march. Display the results in month order, but only show the first4  records returned.
+##### Limit
 
 
 ```sql
@@ -397,6 +392,8 @@ where month(dob) not in(1,2,3)
 order by month(dob) 
 limit 4;
 ```
+
+Shows all people not born in first 3 months of year, sorted by month order. Only show the first few  records return
 
 personID | name  | age  | sex  | dob        | isStudent |
 --- | --- | --- | ---| --- |---|
@@ -437,7 +434,7 @@ limit 5;
 ```
 
 | emp_no | birth_date | first_name | last_name | gender | hire_date  |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |---| 
 |  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
 |  10002 | 1964-06-02 | Bezalel    | Simmel    | F      | 1985-11-21 |
 |  10003 | 1959-12-03 | Parto      | Bamford   | M      | 1986-08-28 |
@@ -458,6 +455,9 @@ select emp_no, first_name, upper(last_name) as last_name from employees limit 5;
 |  10003 | Parto      | BAMFORD   |
 |  10004 | Chirstian  | KOBLICK   |
 |  10005 | Kyoichi    | MALINIAK  |
+
+***
+### STRING FUNCTIONS: length(), substr(), concat(), format()
 
 ```sql
 select * from employees 
@@ -481,7 +481,7 @@ The **string function** [`char_length()`](https://dev.mysql.com/doc/refman/8.0/e
 
 Show all details of the first 10 employees returned from the database and an extra column called Initials that shows the employee’s initials. 
 
-### String functions:  concat(), substr()
+### concat(), substr()
 
 ```sql
 select *, concat(substr(first_name,1,1), substr(last_name,1,1)) as Initials from employees limit 5;
@@ -555,9 +555,11 @@ and hire_date <="1991-02-28";
 |  10023 | 1953-09-29 | Bojan      | Montemayor | F      | 1989-12-17 |
 |  10041 | 1959-08-27 | Uri        | Lenart     | F      | 1989-11-12 |
 
+***
 ### [Aggregate GROUP BY functions](https://dev.mysql.com/doc/refman/8.0/en/group-by-functions.html)
-### GROUP BY
-### AVG(), MAX()
+
+#### GROUP BY
+#### AVG(), MAX()
 
 ```sql
 select * from person;
@@ -577,7 +579,7 @@ select round(avg(age)) from person where sex="M";
 
 ### Count, group by.
 
-### SELECT ... , COUNT(*) FROM ... GROUP BY ...;
+#### SELECT ... , COUNT(*) FROM ... GROUP BY ...;
 Does a count based on the group by
 
 ```sql
@@ -596,7 +598,7 @@ Shows the number of people born in each month
 | June           |        1 |
 
 
-### SELECT AVG() AS ... FROM ... GROUP BY ... LIMIT... 
+#### SELECT AVG() AS ... FROM ... GROUP BY ... LIMIT... 
 ```sql
 select emp_no, round(avg(salary),2) as average_salary from salaries group by emp_no limit 5;
 
@@ -608,21 +610,22 @@ select emp_no, round(max(salary),2) as average_salary from salaries group by emp
 |  10001 |          88958 |
 |  10002 |          72527 |
 
-+--------+----------------+
+
 | emp_no | average_salary |
 --- | ---
 |  10001 |       75388.94 |
 |  10002 |       68854.50 |
 
 ### WHERE 
-### SELECT ... FROM ... WHERE ... AND ... GROUP BY...
+
+#### SELECT ... FROM ... WHERE ... AND ... GROUP BY...
 ```sql
  select emp_no,round(avg(salary),2) from salaries 
  where emp_no in (10001, 10021, 10033, 10087) 
  and salary > 80000 
  group by emp_no;
  ```
-+--------+----------------------+
+
 | emp_no | round(avg(salary),2) |
 --- | ---
 |  10001 |             83745.57 |
@@ -634,7 +637,7 @@ This shows the average salaries for these 4 employees, but only including salari
 
 ### HAVING
 
-### SELECT ... FROM ... GROUP BY ... HAVING AVG()>...`
+#### SELECT ... FROM ... GROUP BY ... HAVING AVG()>...`
 ```sql
 SELECT EMP_NO, ROUND(AVG(SALARY) )
 FROM SALARIES 
@@ -664,6 +667,7 @@ from employees
 | May                   |       10 |
 | January               |        6 |
 
+***
 ## CONTROL FLOW FUNCTIONS.
 
 [CONTROL FLOW FUNCTIONS](https://dev.mysql.com/doc/refman/8.0/en/control-flow-functions.html)
@@ -700,7 +704,7 @@ An alias can be used for the names of the column for printing as otherwise the w
 SELECT *, IF(MILEAGE>500000,"30%","") Discount 
 FROM car;
 ```
-+--------------+--------------------+---------+--------+---------+------------+----------+
+
 | registration | make               | model   | colour | mileage | engineSize | Discount |
 ---| --- | --- | --- | --- | --- |---|
 | 10-G-2334    | Toyota             | Corolla | Green  |  123389 |        1.3 |          |
@@ -762,7 +766,7 @@ END as size
 from car;
 ```
 
-+--------------+--------------------+---------+--------+---------+------------+--------+
+
 ---| --- | --- | --- | --- |---|
 | 10-G-2334    | Toyota             | Corolla | Green  |  123389 |        1.3 | Medium |
 | 10-WH-17931  | Toyota             | Corolla | Silver |  130389 |        1.4 | Large  |
@@ -780,7 +784,7 @@ case
 end as birthQ 
 from employees limit 5;
 ```
-+------------+------------+---------+
+
 | first_name | birth_date | birthQ  |
 --- | --- | ---
 | Georgi     | 1953-09-02 | q3 baby |
@@ -799,7 +803,7 @@ case
     end as "student status" 
     from person limit 5;
 ```
-+------+-----------+------+------------------+
+
 | name | isStudent | age  | student status   |
 ---| --- | --- | --- |
 | John |         1 |   24 | mature student   |
@@ -812,13 +816,13 @@ case
 
 
 
-
+***
 
 ## DATE AND TIME FUNCTIONS.
 
-### Date and time functions, [DATEDIFF()](https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_datediff)
+[DATEDIFF()](https://dev.mysql.com/doc/refman/8.0/en/date-and-time-functions.html#function_datediff)
 
-### IF
+
 ### DATEDIFF
 
 ```SQL
@@ -826,9 +830,9 @@ SELECT *, if(DATEDIFF(to_DATE,from_DATE) <365, "under 1 year","over 1 year") as 
 FROM SALARIES 
 LIMIT 5;
 ```
-+--------+--------+------------+------------+-------------+
+
 | emp_no | salary | from_date  | to_date    | Time        |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |
 |  10001 |  60117 | 1986-06-26 | 1987-06-26 | over 1 year |
 |  10001 |  62102 | 1987-06-26 | 1988-06-25 | over 1 year |
 |  10001 |  66074 | 1988-06-25 | 1989-06-25 | over 1 year |
@@ -885,6 +889,7 @@ from employees limit 3;
 | Bezalel | F |
 | Parto   | M |
 
+***
 
 
 ### FUNCTIONS AND PROCEDURES
@@ -920,7 +925,7 @@ limit 5;
 
 
 | emp_no | birth_date | first_name | last_name | gender | hire_date  | Age_at_hiring |
---- | --- | --- | ---| --- |---| ---| ---|
+--- | --- | --- | ---| --- |---| ---| 
 |  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 | 32.8          |
 |  10002 | 1964-06-02 | Bezalel    | Simmel    | F      | 1985-11-21 | 21.5          |
 |  10003 | 1959-12-03 | Parto      | Bamford   | M      | 1986-08-28 | 26.8          |
@@ -962,7 +967,7 @@ call hires2(1995,null);
 ```
 
  emp_no | birth_date | first_name | last_name   | gender | hire_date  |
---- | --- | --- | ---| --- |---| ---| ---|
+--- | --- | --- | ---| --- |---|
 |  10016 | 1961-05-02 | Kazuhito   | Cappelletti | M      | 1995-01-27 |
 |  10022 | 1952-07-08 | Shahaf     | Famili      | M      | 1995-08-22 |
 |  10026 | 1953-04-03 | Yongqiao   | Berztiss    | M      | 1995-03-20 |
@@ -972,7 +977,7 @@ call hires2(1995,null);
  ```
 +
 | emp_no | birth_date | first_name | last_name | gender | hire_date  |
---- | --- | --- | ---| --- |---| ---| ---|
+--- | --- | --- | ---| --- |---| 
 |  10026 | 1953-04-03 | Yongqiao   | Berztiss  | M      | 1995-03-20 |
 |  10054 | 1957-04-04 | Mayumi     | Schueller | M      | 1995-03-13 |
 
@@ -984,9 +989,9 @@ To check if a parameter is not NULL `IF M IS NOT NULL THEN`.
 ```sql
  select * from person;
  ```
-+----------+-------+------+------+------------+-----------+
+
 | personID | name  | age  | sex  | dob        | isStudent |
---- | --- | --- | ---| --- |---| ---| ---|
+--- | --- | --- | ---| --- |---| 
 |        1 | John  |   24 | M    | 2000-01-01 |         1 |
 |        2 | Tom   |   65 | M    | 1958-03-11 |         0 |
 |        3 | Mary  |   13 | F    | 2005-04-11 |         1 |
@@ -997,9 +1002,9 @@ To check if a parameter is not NULL `IF M IS NOT NULL THEN`.
 ```sql
 describe person;
 ```
-+-----------+---------------+------+-----+---------+----------------+
+
 | Field     | Type          | Null | Key | Default | Extra          |
---- | --- | --- | ---| --- |---| ---| ---|
+--- | --- | --- | ---| --- |---| 
 | personID  | int(11)       | NO   | PRI | NULL    | auto_increment |
 | name      | varchar(20)   | NO   |     | NULL    |                |
 | age       | int(11)       | YES  |     | NULL    |                |
@@ -1078,9 +1083,9 @@ once the procedure is written, change the delimiter back to ;. Then the procedur
 ```sql
 describe doctor_table;
 ```
-+----------+-------------+------+-----+---------+-------+
+
 | Field    | Type        | Null | Key | Default | Extra |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |---| 
 | doctorID | int(11)     | NO   | PRI | NULL    |       |
 | name     | varchar(50) | YES  |     | NULL    |       |
 | phone    | int(11)     | YES  |     | NULL    |       |
@@ -1088,9 +1093,9 @@ describe doctor_table;
 ```sql
 describe patient_table;
 ```
-+------------+--------------+------+-----+---------+-------+
+
 | Field      | Type         | Null | Key | Default | Extra |
---- | --- | --- | ---| --- |---| ---|
+--- | --- | --- | ---| --- |---|
 | ppsn       | varchar(10)  | NO   | PRI | NULL    |       |
 | first_name | varchar(50)  | YES  |     | NULL    |       |
 | surname    | varchar(50)  | YES  |     | NULL    |       |
@@ -1139,7 +1144,7 @@ select * from doctor_table;
 select * from patient_table;
 +----------+------------+----------+-----------+----------+
 | ppsn     | first_name | surname  | address   | doctorID |
---- | --- | --- | ---| --- |---|
+--- | --- | --- | ---| --- |
 | 2344234S | Mary       | Burke    | Galway    |     NULL |
 | 7629913X | John       | Smyth    | Athlone   |      100 |
 | 989333F  | Alan       | Mulligan | Galway    |      101 |
@@ -1147,7 +1152,7 @@ select * from patient_table;
 
 
 ### String function.
-### SUBSTR()
+#### SUBSTR()
 
 ```sql
 select substr(name,5) 
@@ -1171,7 +1176,7 @@ on pt.doctorID = dt.doctorid;
 This query shows all details of all patients with associated doctors.
 
  ppsn     | first_name | surname  | address   | doctorID | doctorID | name       | phone |
---- | --- | --- | ---| --- |---| ---| ---| --- |
+--- | --- | --- | ---| --- |---| ---| ---| 
 | 7629913X | John       | Smyth    | Athlone   |      100 |      100 | Dr. Jones  | 12345 |
 | 9898823W | Fred       | Collins  | Castlebar |      100 |      100 | Dr. Jones  | 12345 |
 | 989333F  | Alan       | Mulligan | Galway    |      101 |      101 | Dr. Murphy | 88335 |
@@ -1192,13 +1197,14 @@ This query returns the details of patients treated by a particular doctor.
 
 
 name      | phone | ppsn     | first_name | surname |
---- | --- | --- | ---| --- |---|
+--- | --- | --- | ---| --- |
 | Dr. Jones | 12345 | 9898823W | Fred       | Collins |
 | Dr. Jones | 12345 | 7629913X | John       | Smyth   |
 
 
 ### DISTINCT
 
+#### Select distinct() from ... inner join ... on  ... = ... ;
 ```sql
 select distinct(dt.name)
 from doctor_table dt
@@ -1208,6 +1214,7 @@ on dt.DoctorId = pt.Doctorid;
 This query returns the unique names of doctors who are treating patients.
 
 ### LEFT JOIN
+
 ### NULL
 ```sql
  select pt.ppsn, pt.surname, pt.first_name, dt.name from patient_table pt  left join doctor_table dt on pt.Doctorid= dt.doctorid;
@@ -1235,7 +1242,7 @@ from patient_table pt
 left join doctor_table dt 
 on pt.doctorid = dt.doctorid;
 ```
-+------------+----------+------------+
+
 | first_name | surname  | name       |
 --- | --- | --- | 
 | Mary       | Burke    | NULL       |
@@ -1257,7 +1264,7 @@ on pt.doctorid = dt.doctorid;
 | John       | Smyth    | Dr. Jones  |
 | Fred       | Collins  | Dr. Jones  |
 | Alan       | Mulligan | Dr. Murphy |
-+------------+----------+------------+
+
 
 ```sql
 select dt.*, pt.surname 
@@ -1282,7 +1289,7 @@ on pt.doctorid = dt.doctorid
 where pt.first_name ="Alan";
 ```
 
-+------------+----------+------------+
+
 | first_name | surname  | name       |
 --- | --- | --- |
 | Alan       | Mulligan | Dr. Murphy |
@@ -1297,9 +1304,9 @@ on pt.doctorid = dt.doctorid;
 ```
 
 returns all patients from the patient_table with details of doctor they are attending if any.
-+----------+------------+----------+------------+-------+
+
 | ppsn     | first_name | surname  | name       | phone |
---- | --- | --- | ---| --- |---|
+--- | --- | --- | ---| --- |
 | 2344234S | Mary       | Burke    | NULL       |  NULL |
 | 7629913X | John       | Smyth    | Dr. Jones  | 12345 |
 | 989333F  | Alan       | Mulligan | Dr. Murphy | 88335 |
@@ -1311,18 +1318,18 @@ returns all patients from the patient_table with details of doctor they are atte
 show create table manufacturer;
 ```
 
- manufacturer | CREATE TABLE `manufacturer` (
-  `manu_code` varchar(3) NOT NULL,
-  `manu_name` varchar(200) NOT NULL,
-  `manu_details` varchar(400) DEFAULT NULL,
-  PRIMARY KEY (`manu_code`)
+manufacturer CREATE TABLE `manufacturer` (
+    `manu_code` varchar(3) NOT NULL,
+    `manu_name` varchar(200) NOT NULL,
+    `manu_details` varchar(400) DEFAULT NULL,
+    PRIMARY KEY (`manu_code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 
 
 ```sql
 show create table vehicles;
 ```
 
-vehicle | CREATE TABLE `vehicle` (
+vehicle CREATE TABLE `vehicle` (
   `reg` varchar(20) NOT NULL,
   `manu_code` varchar(3) NOT NULL,
   `mileage` int(11) DEFAULT NULL,
@@ -1356,7 +1363,7 @@ select * from vehicle;
 ```
 
  reg          | manu_code | mileage | price    | colour | fuel   |
---- | --- | --- | ---| --- |---| --- |
+--- | --- | --- | ---| --- |---| 
 | 2003-LM-201  | TOY       |  170000 |  3500.50 | Red    | petrol |
 | 2009-RN-12   | FOR       |   98242 |  2500.00 | Red    | petrol |
 | 2010-G-13345 | TOY       |   50000 |  8599.00 | Silver | petrol |
@@ -1380,13 +1387,15 @@ manu_code | manu_name      | concat(substr(manu_details,1,10),"...") |
 | TOY       | Toyota         | Toyota Mot...                           |
 | VOL       | Volkswagen     | Volkswagen...          
 
-### length
+#### Length
+
 ```sql
-select length(manu_details) from manufacturer;
+select length(manu_details) 
+from manufacturer;
 ```
-+----------------------+
+
 | length(manu_details) |
----
+| --- |
 |                  142 |
 |                  112 |
 |                  143 |
@@ -1398,16 +1407,18 @@ select length(manu_details) from manufacturer;
  ```
 
 | avg(length(manu_details)) |
----
-|                  122.6000 |
+| --- |   
+               122.6000 |
 
 ```sql
-select format(avg(length(manu_details)),0) as "Length" from manufacturer;
+select format(avg(length(manu_details)),0) as "Length" 
+from manufacturer;
 ```
+
 This shows the average length of the manu_name formatted to 0 decimal places.
-+--------+
+
 | Length |
----
+| --- |
 | 123    |
 
 ```sql
@@ -1417,7 +1428,8 @@ from vehicle;
 
 This query includes a column called “cost” which has the value 1.45 if the fuel is petrol otherwise has the value 1.30.
 
-### Getting information from two tables
+### JOINING TABLES TO GET DATA FROM MULTIPLE TABLES
+
 
 The `vehicle` table has a foreign key `manu_code` referencing the `manu_code` field in the `manafacturer` table.\
  **KEY `vehicle_ibfk_1` (`manu_code`),**
@@ -1487,7 +1499,7 @@ on m.manu_code = v.manu_code;
 ```
 This query will return less rows that the same query using a left join as it excludes the rows where the condtions are not met.
 
-+-----------+-----------+--------------+
+
 | manu_code | manu_name | reg          |
 --- | --- | --- |
 | FOR       | Ford      | 2009-RN-12   |
@@ -1498,7 +1510,7 @@ This query will return less rows that the same query using a left join as it exc
 | TOY       | Toyota    | 2010-G-13345 |
 | TOY       | Toyota    | 2016-D-12345 |
 
-7 rows in set (0.00 sec)
+***
 
 ### STORED PROCEDURE
 
@@ -1506,11 +1518,12 @@ The `show create table` on vehicles shows that the vehicles table has a foreign 
 
 
 KEY `vehicle_ibfk_1` (`manu_code`),
-  CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)
+  **CONSTRAINT `vehicle_ibfk_1` FOREIGN KEY (`manu_code`) REFERENCES `manufacturer` (`manu_code`)**
 
 The manufacturer table has no foreign key constraint.
 
 Write the code first for a query
+
 ```sql
  select v.reg, v.manu_code, m.manu_name, v.mileage, v.price
     -> from vehicle v
@@ -1557,5 +1570,655 @@ call price_less_than(10000);
 | 2010-G-13345 | TOY       | Toyota    |   50000 | 8599.00 |
 
 
+***
+
+# CRUD functions
+- Create/Insert
+- Read
+- Update 
+- Delete
+
+```sql
+describe bus
+```
+
+ Field         | Type                               | Null | Key | Default | Extra |
+ --- | --- | --- | --- | --- | --- |
+| reg           | varchar(15)                        | NO   | PRI | NULL    |       |
+| maxPassengers | int(11)                            | YES  |     | NULL    |       |
+| fuel          | enum('Diesel','Petrol','Electric') | YES  |     | Diesel  |    
 
 
+```sql
+SHOW create table bus
+```
+
+BUS   | CREATE TABLE `BUS` (
+  `reg` varchar(15) NOT NULL,
+  `maxPassengers` int(11) DEFAULT NULL,
+  `fuel` enum('Diesel','Petrol','Electric') DEFAULT 'Diesel',
+  PRIMARY KEY (`reg`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+```sql
+describe driver;
+
+```
+ Field     | Type        | Null | Key | Default | Extra |
+ --- | --- | --- | --- | --- | --- |
+| licenceNo | varchar(20) | NO   | PRI | NULL    |       |
+| name      | varchar(30) | YES  |     | NULL    |       |
+| busReg    | varchar(15) | YES  | MUL | NULL    |   
+
+
+```sql
+show create table driver
+```
+
+driver | CREATE TABLE `driver` (
+  `licenceNo` varchar(20) NOT NULL,
+  `name` varchar(30) DEFAULT NULL,
+  `busReg` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`licenceNo`),
+  KEY `busReg` (`busReg`),
+  **CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE CASCADE**
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+`describe car;`
+
+| Field        | Type        | Null | Key | Default | Extra |
+ --- | --- | --- | --- | --- | --- |
+| registration | varchar(15) | NO   | PRI | NULL    |       |
+| make         | varchar(20) | YES  |     | NULL    |       |
+| model        | varchar(20) | YES  |     | NULL    |       |
+| colour       | varchar(10) | YES  |     | NULL    |       |
+| mileage      | int(11)     | YES  |     | NULL    |       |
+| engineSize   | float(2,1)  | YES  |     | NULL    |       |
+
+```sql
+show create table car;
+```
+
+car   | CREATE TABLE `car` (
+  `registration` varchar(15) NOT NULL,
+  `make` varchar(20) DEFAULT NULL,
+  `model` varchar(20) DEFAULT NULL,
+  `colour` varchar(10) DEFAULT NULL,
+  `mileage` int(11) DEFAULT NULL,
+  `engineSize` float(2,1) DEFAULT NULL,
+  PRIMARY KEY (`registration`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci
+
+```sql
+describe person
+```
+Field     | Type          | Null | Key | Default | Extra          |
+ --- | --- | --- | --- | --- | --- |
+| personID  | int(11)       | NO   | PRI | NULL    | auto_increment |
+| name      | varchar(20)   | NO   |     | NULL    |                |
+| age       | int(11)       | YES  |     | NULL    |                |
+| sex       | enum('M','F') | YES  |     | M       |                |
+| dob       | date          | YES  |     | NULL    |                |
+| isStudent | tinyint(1)    | YES  |     | NULL    
+
+```sql
+show create table person
+```
+
+person | CREATE TABLE `person` (
+  `personID` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(20) NOT NULL,
+  `age` int(11) DEFAULT NULL,
+  `sex` enum('M','F') DEFAULT 'M',
+  `dob` date DEFAULT NULL,
+  `isStudent` tinyint(1) DEFAULT NULL,
+  PRIMARY KEY (`personID`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci |
+
+***
+
+
+### INSERT
+When entering values for all the fields there is no need to specify the fields.
+
+### INSERT into ...  values ()
+
+### INSERT INTO TABLE (..,..,..,) VALUES (.., .. ,..);
+
+
+```sql
+INSERT into person values(“John”,23,”Male”, true);
+```
+
+This will result in an error as there are 5 columns and it will not know which values are for which columns. Specify the associated values.
+
+*Column count doesn't match value count at row 1*
+
+
+### INSERT -  error if no value supplied for a primary key which cannot be null (and it doesn't auto-increment)
+```sql
+insert into driver(name) values ("Mary");
+```
+results in an error:
+`Error code:1364  Field 'LicenceNo` doesn't have a default value.`
+
+The `describe driver` command shows thay `LicenceNo` is a **primary key** and it cannot be NULL.
+
+`describe driver;` shows that `LicenceNo` is a primary key and it cannot be `NULL` therefore 
+
+
+| Field     | Type        | Null | Key | Default | Extra |
+| --- | --- | --- | --- | --- | --- |
+| licenceNo | varchar(20) | NO   | PRI | NULL    |       |
+| name      | varchar(30) | YES  |     | NULL    |       |
+| age       | int(11)     | YES  |     | NULL    |       |
+| busReg    | varchar(15) | YES  | MUL | NULL    |       |
+
+.
+```sql
+insert into driver(name, licenceNo) values ("Bob","RN2423");
+```
+This adds a new row with for the two columns not supplied with values.
+
+### INSERT - Error as foreign key constraint fails - when the foreign key doesn't exist on the other table
+```sql
+insert into driver(name, licenceNo, busReg) values ("Gillian","W12X45","201-G-123");
+```
+Results in an error as the bus reg does not already exist in the bus table.
+
+*Cannot add or update a child row: a foreign key constraint fails (`bus`.`driver`, CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE CASCADE)*
+
+### INSERT - Error  as duplicate entry for the primary key already used for another row.
+Cannot have the same primary key  as another row.
+```sql
+insert into bus(reg, maxPassengers, fuel) values("12-G-1323",34, "Diesel");
+```
+
+**ERROR 1062 (23000): Duplicate entry '12-G-1323' for key 'PRIMARY'**
+
+### INSERT - Error Data truncated ... 
+
+```sql
+insert into bus values("191-D-45890", 120, "Ethanol");
+```
+ERROR 1265 (01000): Data truncated for column 'fuel' at row 1
+
+```sql
+describe bus
+```
+
+| Field         | Type                               | Null | Key | Default | Extra |
+| --- | --- | --- | --- | --- | --- |
+| reg           | varchar(15)                        | NO   | PRI | NULL    |       |
+| maxPassengers | int(11)                            | YES  |     | NULL    |       |
+| fuel          | **enum('Diesel','Petrol','Electric')** | YES  |     | Diesel  | 
+
+The Type for the `Fuel` field is **ENUM** which is a list of permitted values that are enumerated explicitly at the table creation time. See[Section 11.3.5  The Enum Type](https://dev.mysql.com/doc/refman/8.0/en/enum.html). There are only three possible values for fuel allowed which doesn't include ethanol. The fuel Field is of Type (enum("Diesel","Petrol","Electric")).
+
+
+
+### UPDATE ...SET ... CASE WHEN
+```sql
+update person
+set age = 
+case
+    when age is null then 18
+    else age +1
+end;
+```
+### UPDATE ... SET ... WHERE ... = ...;
+
+```sql
+update car 
+set make = "Ford Motors" 
+where make = "Ford";
+
+```
+
+```SQL
+select * from car;
+```
+
+| registration | make        | model      | colour | mileage | engineSize |
+ --- | --- | --- | --- | --- | --- |
+| 05-MO-17931  | Toyota      | Highlander | Green  |  253789 |        1.6 |
+| 10-G-2334    | Toyota      | Corolla    | Green  |  123389 |        1.3 |
+| 10-WH-17931  | Toyota      | Corolla    | Silver |  130389 |        1.4 |
+| 11-MO-23431  | Toyota      | Corolla    | Black  | 1234123 |        1.3 |
+| 12-WH-123    | Ford Motors | Ka         | Black  |  125882 |        1.0 |
+| 132-G-9923   | Ford Motors | Ka         | Silver |  325883 |        1.0 |
+| 132-MO-19323 | Ford Motors | Galaxy     | Silver |    2343 |        1.5 |
+| 171-G-39532  | Toyota      | Corolla    | Silver |   55882 |        1.3 |
+| 171-MO-12533 | Ford Motors | Fiesta     | Black  |   25882 |        1.0 |
+| 99-G-300     | Toyota      | Corolla    | Green  |  599339 |        1.3 |
+
+
+
+
+### UPDATE ... SET ...=CONCAT() WHERE ... LIKE ... OR ... LIKE ...
+
+
+The concat function joins two strings together which we want to do here on a condition.
+
+```sql
+update driver
+set licenceNo = CONCAT("T-", licenceNo)
+WHERE licenceNo like  "%F%"
+OR licenceNo like "%R%";
+
+```
+
+This query updates the licenceNo for rows that meet the `where` condition. The `concat` function joins two strings together
+```sql
+select * from driver;
+```
+
+| licenceNo | name | busReg     |
+| --- | --- | --- |
+| L23423    | John | 12-G-1323  |
+| T-F2233   | Alan | 191-G-123  |
+| T-RN2423  | Bob  | NULL       |
+| X98983    | Tom  | 161-D-1323 |
+
+
+### DELETE  - FOREIGN KEY CONSTRAINTS
+
+
+### FOREIGN KEY CONSTRAINT .. ON DELETE CASCADE
+
+
+```sql
+show create table driver
+```
+
+CREATE TABLE `driver` (
+  `licenceNo` varchar(20) NOT NULL,
+  `name` varchar(30) DEFAULT NULL,
+  `busReg` varchar(15) DEFAULT NULL,
+  PRIMARY KEY (`licenceNo`),
+  KEY `busReg` (`busReg`),
+  **CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE CASCADE**
+) ENGINE=InnoDB DEFAULT CHARSET=latin1
+
+
+The foreign key constraint `ON DELETE CASCADE` means that anytime a row is deleted from one table which has a foreign key referencing another table, the deletion will flow or cascade into another table.
+In this case the `reg` in the `bus` table is being referenced by another table through a foreign key.The `bus` table itself does not have a foreign key but the `driver` table has a foreign key called `busreg` which has a foreign key constraint `ON DELETE CASCASE`. Therefore any rows deleted from the `bus` table which are referenced by the same `reg` in the `driver` table will be also deleted from the `driver` table. (`busReg`). The rows in the `driver` table with a foreign key `busReg` linking to the `reg` field in the `bus` table will also be deleted.
+
+Note thay MySQL does not tell you that this has happened. It only lets you know that the bus table was affected `OK,1 row affected`. Because the constraint is set up as `on delete cascade` the delete flows or cascades from one table to the other table.
+
+```sql
+delete from bus where reg ="161-D-1323";
+```
+If the `driver` table 's foreign key `busReg` which references the `reg` column in the `bus` table is set to `ON DELETE CASCADE`, this means that if a row in the bus table is deleted and the value of the reg is used in the driver table, then this row should also be deleted from the driver table.
+
+### FOREIGN KEY CONSTRAINT .. ON DELETE RESTRICT
+
+`ON DELETE RESTRICT` means that if a row in the `bus` table is deleted and the value of the `reg` column is used in the `driver` table, that this row should **NOT** be deleted from the bus table as the driver table is restricting the delete.
+
+### FOREIGN KEY CONSTRAINT .. ON DELETE SET NULL
+
+`ON DELETE SET NULL` means that if a row in the bus table is deleted and the value of the `reg` column is used in the driver table, that the `busReg` in the driver table which was referencing the `reg` to be deleted from the driver table should be set to NULL, so now the `busReg` will no longer be referenced and can then be deleted from the bus table.
+
+**CONSTRAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus` (`reg`) ON DELETE SET NULL**
+) ENGINE=InnoDB DEFAULT CHARSET=latin
+
+The foreign key from the driver table is pointing in to the bus table. If a row is deleted from the bus table which is referenced in the driver table, the foreign key in the driver table will first be set to 'NULL' and then the row can be deleted from the bus table. Unlike `on delete cascade`, the row referencing the reg will not be deleted from the `driver` table. The foreign key will just be updated to `NULL`.
+
+
+
+***
+### OPERATOR PRECEDENCE
+
+```SQL
+SELECT * FROM CAR 
+WHERE mileage > 150000 AND (COLOUR = "Green" OR COLOUR ="SILVER");
+```
+
+| registration | make        | model      | colour | mileage | engineSize |
+ --- | --- | --- | --- | --- | --- |
+| 05-MO-17931  | Toyota      | Highlander | Green  |  253789 |        1.6 |
+| 132-G-9923   | Ford Motors | Ka         | Silver |  325883 |        1.0 |
+| 99-G-300     | Toyota      | Corolla    | Green  |  599339 |        1.3 |
++--------------+-------------+------------+--------+---------+------------+
+
+
+Delete cars coloured green or silver  whose mileage is greater than 150000;
+Be careful of operator precedence. 
+***
+
+# SUB-QUERIES
+
+```sql
+select * from bus;
+```
+
+| reg        | maxPassengers | fuel     |
+| --- | --- | --- |
+| 12-G-1323  |            34 | Petrol   |
+| 161-D-1323 |            80 | Diesel   |
+| 162-D-3433 |           120 | Electric |
+| 191-G-123  |            56 | Diesel   |
+
+4 rows in set (0.00 sec)
+
+mysql> select * from driver;
+| --- | --- | --- | --- |
+| licenceNo | name | age  | busReg     |
++-----------+------+------+------------+
+| L23423    | John |   32 | 12-G-1323  |
+| X98983    | Tom  |   57 | 161-D-1323 |
+
+
+
+
+```sql
+select * from driver
+where age=
+(
+	select max(age)
+    from driver
+)
+;
+```
+
+The result of the inner query gets replaced as the argument in the outer query. In this way the query is written dynamically instead of hard-coding in a value. Therefore the same query can be used even if the results of the inner query has changed.
+
+
+### SubQuery on one table
+
+Can use a sub-query here instead of writing each part of the query separately and then passing the actual values to another query.
+
+```sql
+select * from driver
+where age=
+(
+	select max(age)
+    from driver
+)
+;
+```
+ licenceNo | name | age  | busReg     |
+| --- | --- | --- | --- |
+| X98983    | Tom  |   57 | 161-D-1323 |
+
+
+The result of the inner query gets replaced as the argument in the outer query. This is better than running a query first to get the oldest driver's age and then writing another query where age = this value. This query shows the driver details for the oldest driver.
+
+
+### SubQuery across more than one table.
+### IN, MIN, MAX
+Show all details of the bus driven by the youngest driver. When using minimum or maximum, can use IN instead of `=` in case there are more than one row with the minimum or maximum values for that column.
+
+
+First find the youngest driver, then find the bus reg associated with the youngest driver. Then find all the details of the bus.
+
+Return the results of the inner query to the outer query and use this in the outer query.
+
+
+First find the age of the youngest driver and use the results of this in an outer query to find the busReg of the youngest driver. 
+Using `IN` instead of `=` if there are more than one driver with the same minimum age.
+Then once the busReg is returned, use this in an outer query again to get all the details of the bus.
+
+
+
+```sql
+select * from bus
+where reg =
+    (select busReg from driver
+    where age in
+        (
+	    select min(age) from driver
+        )
+    )
+;
+```
+This query finds the age of the youngest driver(s) and returns the results to the next outer query which then finds the busReg associated with the youngest driver(s). The results of this are returned to the outermost query.
+
+
+ reg       | maxPassengers | fuel   |
+| --- | --- | --- |
+| 12-G-1323 |            34 | Petrol 
+
+### subQuery or Inner Join
+
+```sql
+select licenceNo from driver
+	where busReg in (
+		select reg from bus
+		where fuel = "Diesel")
+;
+```
+This query returns the reg from the bus table for diesel cars to the outer query which uses the result of the inner query to find the licenceNo from the driver table. The overall result is the license number of the driver who drives diesel buses.
+
+licenceno |
+| --- |
+| X98983  
+
+***
+### Sub-query across two tables.
+
+
+CREATE TABLE `salaries` (
+  `emp_no` int(11) NOT NULL,
+  `salary` int(11) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  PRIMARY KEY (`emp_no`,`from_date`),
+  KEY `emp_no` (`emp_no`),
+  **CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE**
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+
+```sql
+show create table employees;
+```
+
+CREATE TABLE `employees` (
+  `emp_no` int(11) NOT NULL,
+  `birth_date` date NOT NULL,
+  `first_name` varchar(14) NOT NULL,
+  `last_name` varchar(16) NOT NULL,
+  `gender` enum('M','F') NOT NULL,
+  `hire_date` date NOT NULL,
+  PRIMARY KEY (`emp_no`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 |
+
+
+```sql
+select e.emp_no, first_name, last_name
+from employees e
+where e.emp_no IN (
+    select s.emp_no
+    from salaries s
+    where s.salary between 99000 and 99999
+)
+;
+```
+
+***
+### INNER JOIN or SUB-QUERY.
+
+Instead of using a sub-query here, an inner join could be used as there is a foreign key linking the two tables.
+``` sql
+select d.licenceNo 
+from driver d
+inner join bus b
+on d.busReg = b.reg
+where b.fuel ="Diesel";
+```
+
+licenceno |
+| --- |
+| X98983    |
+
+
+### How are tables in a database related?
+
+```sql
+show create table bus;
+show create table driver
+```
+Can see how the two tables are related using the `show create table` command. 
+The `bus` table does not have a foreign key so it is not related to any other table but the `driver` table has a foreign key - the busReg column referencing the bus column in the bus table. 
+
+```sql
+show create table driver
+```
+
+KEY `busreg` (`busReg`)
+CONSTAINT `driver_ibfk_1` FOREIGN KEY (`busReg`) REFERENCES `bus`(`reg`) ON DELETE CASCADE)
+
+
+- The two tables are related on the `busReg` key in the `driver` table being a foreign key referencing the `reg` column in the `bus` table.
+- The `driver` table has a column called `busReg` which is a foreign key referencing the `reg` column in the `bus` table. 
+
+- The Reverse engineer EER diagram will show the connection from the `busReg` column (under Indexes)  with arrow pointing to the `reg` field in the `bus` table.
+
+
+## SUB-QUERIES
+
+ SELECT * FROM EMPLOYEES LIMIT 5;
+
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
+| --- | --- | --- | --- | --- | --- |
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
+|  10002 | 1964-06-02 | Bezalel    | Simmel    | F      | 1985-11-21 |
+|  10003 | 1959-12-03 | Parto      | Bamford   | M      | 1986-08-28 |
+|  10004 | 1954-05-01 | Chirstian  | Koblick   | M      | 1986-12-01 |
+|  10005 | 1955-01-21 | Kyoichi    | Maliniak  | M      | 1989-09-12 |
+
+```sql
+SELECT FLOOR(AVG(YEAR(BIRTH_DATE))) FROM EMPLOYEES;
+```
+
+
+| FLOOR(AVG(YEAR(BIRTH_DATE))) |
+| -- |
+|                         1957 |
+
+
+This query shows the average birth year is 1957. Instead of hard-coding this value into another query to get the details of the employees born in that year using a sub-query. 
+
+**`floor`** is used to round down instead of **round**. 
+
+Show the emp_no, first_name and last_name of employees born in the average year.
+
+
+```sql
+select emp_no, first_name, last_name
+from employees
+where year(birth_date)=(
+	select floor(avg(year(birth_date)))
+	from employees
+    )
+;
+```
+This query returns details specified of employees born in the average year.
+
+emp_no | first_name | last_name    |
+| --- | --- | ---
+|  10007 | Tzvetan    | Zielinski    |
+|  10045 | Moss       | Shanbhogue   |
+|  10054 | Mayumi     | Schueller    |
+|  10080 | Premal     | Baek         |
+|  10094 | Arumugam   | Ossenbruggen |
+
+***
+
+### Joining multiple tables to get data from two tables that are not directly connected.
+
+In this database there are 3 tables. 
+There are no foreign keys in the `dept` and `employees` tables but there are two foreign keys in the `salaries` table linking to each of these two tables. 
+- The `emp_no` field in `salaries` is a foreign key referencing the `emp_no` field in the `employees` table.
+- The `dept_no` field in `salaries` is a foreign key referencing the `dept_no` field in the `dept` table.
+
+
+```sql
+ select * from dept;
+```
+
+| dept_no | name                   |
+| --- | --- |
+| HR103   | Human Resources        |
+| RD332   | Research & Development |
+| S403    | Sales                  |
+
+
+```sql
+select * from employees;
+```
+| emp_no | birth_date | first_name | last_name | gender | hire_date  |
+| --- | --- | --- | --- | --- | ---
+|  10001 | 1953-09-02 | Georgi     | Facello   | M      | 1986-06-26 |
+|  10002 | 1964-06-02 | Bezalel    | Simmel    |  |F      | 1985-11-21 |
+
+
+```sql
+select * from salaries;
+```
+| emp_no | salary | from_date  | to_date    | dept_no |
+| --- | --- | --- | --- | --- | --- |
+|  10001 |  60117 | 1986-06-26 | 1987-06-26 | HR103   |
+|  10001 |  62102 | 1987-06-26 | 1988-06-25 | HR103   |
+
+`describe dept;`
+
+| Field   | Type        | Null | Key | Default | Extra |
+| --- | --- | --- | --- | --- | --- |
+| dept_no | varchar(10) | NO   | PRI | NULL    |       |
+| name    | varchar(50) | NO   |     | NULL    |       |
+
+`describe employees;`
+
+Field      | Type          | Null | Key | Default | Extra |
+| --- | --- | --- | --- | --- | --- |
+| emp_no     | int(11)       | NO   | PRI | NULL    |       |
+| birth_date | date          | NO   |     | NULL    |       |
+| first_name | varchar(14)   | NO   |     | NULL    |       |
+| last_name  | varchar(16)   | NO   |     | NULL    |       |
+| gender     | enum('M','F') | NO   |     | NULL    |       |
+| hire_date  | date          | NO   |     | NULL    |     
+
+`describe salaries;`
+
+ Field     | Type        | Null | Key | Default | Extra |
+| --- | --- | --- | --- | --- | --- |
+| emp_no    | int(11)     | NO   | PRI | NULL    |       |
+| salary    | int(11)     | NO   |     | NULL    |       |
+| from_date | date        | NO   | PRI | NULL    |       |
+| to_date   | date        | NO   |     | NULL    |       |
+| dept_no   | varchar(10) | YES  | MUL | NULL    |      
+
+
+
+salaries | CREATE TABLE `salaries` (
+  `emp_no` int(11) NOT NULL,
+  `salary` int(11) NOT NULL,
+  `from_date` date NOT NULL,
+  `to_date` date NOT NULL,
+  `dept_no` varchar(10) DEFAULT NULL,
+  PRIMARY KEY (`emp_no`,`from_date`),
+  KEY `emp_no` (`emp_no`),
+  KEY `dept_no` (`dept_no`),
+  **CONSTRAINT `salaries_ibfk_1` FOREIGN KEY (`emp_no`) REFERENCES `employees` (`emp_no`) ON DELETE CASCADE**,
+  **CONSTRAINT `salaries_ibfk_2` FOREIGN KEY (`dept_no`) REFERENCES `dept` (`dept_no`) ON DELETE CASCADE**
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+```sql
+select distinct e.emp_no, e.first_name, e.last_name, d.name 
+from employees e 
+inner join salaries s
+on e.emp_no = s.emp_no 
+inner join dept d 
+on d.dept_no = s.dept_no;
+```
+
+This query joins together 3 tables even though no information is required from one table. 
+
+emp_no | first_name  | last_name    | name                   |
+| --- | --- | --- | --- |
+|  10001 | Georgi      | Facello      | Human Resources        |
+|  10002 | Bezalel     | Simmel       | Human Resources        |
+|  10003 | Parto       | Bamford      | Human Resources        |
+|  10004 | Chirstian   | Koblick      | Human Resources      
