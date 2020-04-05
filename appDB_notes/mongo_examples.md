@@ -23,7 +23,7 @@ To quit from the mongo shell, enter `quit()` command to exit mongo.
 `brew services stop mongodb-community` 
 
 Following the advice of Zell on zellwk.com I have created aliases for the commands above in Terminal.
-`$ alias mongod='brew services run mongodb-community'`
+`$ alias mongod-start='brew services run mongodb-community'`
 `$ alias mongod-status='brew services list'`
 `$ alias mongod-stop='brew services stop mongodb-community'`
 
@@ -91,7 +91,7 @@ db.User.save(
 ## .save() 
 
 ```json
-db.users.save({_id:100, fname:"Sean",surname:"Murphy",age:21,email:"seanmurph@yahoo.com",carReg:"04-WH-235"})
+db.docs.save({_id:100, fname:"Sean",surname:"Murphy",age:21,email:"seanmurph@yahoo.com",carReg:"04-WH-235"})
 db.users.save({_id:100, fname:"John",surname:"Smith",age:33,email:"jsmith@gmail.com",carReg:"131-G-101"})
 db.users.save({_id:102, fname:"Aine",surname:"Browne",age:23,email:"abrowne@gmail.com"})
 ```
@@ -287,6 +287,8 @@ Using `$set`, if the attribute exists it changes it to the new value, otherwise 
 db.users.update({_id:105},{$set:{carReg:"161-MO-4"}})
 ```
 
+db.docs.update({_id:1},{$set:{carReg:"191-K-4"}})
+
 >WriteResult({ "nMatched" : 1, "nUpserted" : 0, "nModified" : 0 })
 ```json
 db.users.find({_id:105})
@@ -298,8 +300,9 @@ db.users.find({_id:105})
 
 ## Updating several attributes at the same time:
 
+
 ```json
-db.users.update({_id:106}, {$set:{fname:"Shane",Surname:"Kelly",age:24,email:"sk998@yahoo.com"}})
+db.docs.update({_id:201}, {$set:{fname:"Shane",Surname:"Kelly",age:24,email:"sk998@yahoo.com"}})
 ```
 
 ## Updating an attribute for all documents in the collection 
@@ -308,14 +311,14 @@ Using **`multi:true`** with `update()` or **`updateMany()`** command.
 
 Set the **`multi`** paramater to true to update all documents. Otherwise only the first document will be updated
 
-`db.users.update({},{$inc:{age:1}})` only update the first age in the first document.
+`db.docs.update({},{$inc:{age:1}})` only update the first age in the first document.
 
 See [multi](https://docs.mongodb.com/manual/reference/method/db.collection.update/#db.collection.update)
 
 ## `multi:true`
 
 ```json
-db.users.update({},{$inc:{age:1}},{multi:true})
+db.docs.update({},{$inc:{age:1}},{multi:true})
 ```
 
 ## `updateMany()`

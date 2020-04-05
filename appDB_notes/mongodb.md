@@ -1,6 +1,6 @@
 # MongoDB
 
-[MongoDB](https://docs.mongodb.com/manual/introduction/) is a document database designed for ease of development and scaling. 
+- [MongoDB](https://docs.mongodb.com/manual/introduction/) is a document database designed for ease of development and scaling. 
 It is used for very large databases and also in areas where the data is much less structured than in traditional relational database environments.
 MongoDB is based on JSON  and has the same concept as databases in relational databases.
 
@@ -141,7 +141,7 @@ In Mongodb, a document is basically a JSON object but they are stored as BSON ob
 
 ### Document
 - A **document** is a record in a MongoDB collection and the basic unit of data in MongoDB.
-- Documents are analogous to JSON objects or records in an RDBMS
+- Documents are analogous to JSON objects or records in an relational database
 
 ```json
 {
@@ -425,7 +425,7 @@ Show all male students and all females.
 
 This means only males that are students and all females.
 
-Everything is a name:value, an $or;  or $and; takes an array []
+Everything is a `name:value`, an `$or;`  or `$and;` takes an array []
 
 ```json
 db.people.find({$or:[{Sex:"Female"}]})
@@ -518,7 +518,7 @@ See [stackoverflow - where is monogimport installed on a mac](https://stackoverf
 mongoimport --db=mydemo --collection=docs --file=/Users/ang.../downloads/demo1.json
 
 
-## find(query, projection)
+## db.collection.find(query, projection)
 
 The syntax of the find method is `find(query, projection)` where the query is what you are looking for - whatever documents match this query is returned. The query parameter is an optional parameter. 
 
@@ -565,6 +565,43 @@ The `aggregate()` method takes 2 parameters.
 - **Groups** input documents by the specified `_id` expression and for each distinct grouping, outputs a document. 
 - The `_id` field of each output document contains the unique group by value. 
 - The output documents can also contain computed fields that hold the values of some **accumulator expression**.
+
+## `aggregate()` method
+See [aggregation quick reference manual](https://docs.mongodb.com/manual/meta/aggregation-quick-reference/).
+
+The `aggregate()` method calculates aggregate values for the data in a collection.
+`db.collection.aggregate(pipeline, options)`
+
+- The `aggregate` method takes one parameter which is an array `[]`. When using aggregate you must use a `$` in front of the field. Using the `db.collection.aggregate` method, pipeline stages appear in an array. 
+- `db.collection.aggregate( [ { <stage> }, ... ] )`
+
+In the `db.collection.aggregate` method, pipeline stages appear in an array. Documents pass through the stages in sequence. Most stages can appear more than once in a pipeline.
+
+## Aggregation pipeline stages include:
+
+-  `$count` : to return a count of the number of documents at this stage of the aggregation pipeline
+-  `$group` : to group input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group.
+- `$bucket` : to categorise incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
+-  `$lookup`: Performs a left outer join to another collection in the same database to filter in documents from the “joined” collection for processing.
+-  `$match`: Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. 
+- `$merge`: to write the resulting documents of the aggregation pipeline to a collection
+- `$project`: Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document. (See `$set` and `$unset` which are aliases for `$project`)
+- `$set` : to add new fields to the document
+- `$unset`: to remove or exclude fields from documents. 
+- `$sort`: to sort the document stream by a specified sort key. 
+and more. 
+
+The `$group` stage has the following prototype form:
+```
+{
+  $group:
+    {
+      _id: <expression>, // Group By Expression
+      <field1>: { <accumulator1> : <expression1> },
+      ...
+    }
+ }
+ ```
 
 ### Average
 
@@ -687,7 +724,9 @@ db.User.createIndex({age: 1})
 
 ## Relationships in MongoDB
 
-Modelling relationships between documents
+Relationships represent how documents might be related to other documents. 
+
+### Modelling relationships between documents: 
 
 - One-to-One Relationships with Embedded Documents
 - One-to-Many Relationships with Embedded Documents
@@ -695,14 +734,7 @@ Modelling relationships between documents
 
 ### One-to-One Relationships with Embedded Documents
 
-
-```json
-db.student.save({_id: "G00789445",
-				name: "John",
-					address: {_id: 100,
-						town: "Athenry",
-						county:"Galway"}})
-```
+Documents can be **embedded** inside another document. This can be used to keep all related data inside a single document making the data easy to retrieve.
 
 Here the query parameter is the empty document which returns all matching documents. The projection parameter contains 3 attributes where the address attribute is an embedded document.
 
@@ -735,11 +767,12 @@ An array is an ordered collection of data. This can contain the many relationshi
 
 
 ```json
-db.student.save({_id:"G00101224", 
+db.student.save({_id:"G00101226", 
 				name:"Mary",
 				modules: [{_id:"M100", module:"Databases"}, 
 				{_id:"M101", module:"Java"}]})
 ```
+
 
 Here a single parameter is provided to the save method with 3 name:value pairs.
 id, name and modules. Modules is an array with 2 elements, each of which is a document. The first of these documents `{_id:"M100", module:"Databases"}` has 2 name:value pairs. The second document `{_id:"M101", module:"Java"}` also has two name value pairs.

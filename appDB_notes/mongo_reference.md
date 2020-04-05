@@ -179,9 +179,9 @@ on how to specify an equality condition on an array using the query document { <
 - The projection is the set set of `{}` provided to the `find` method.
 - to return only the email attribute of documents where the age is greater than 18 you supply two parameters to the find method. 
 
-```json
-db.docs.find({age: {$gt: 20}}, {email:1})
-```
+
+`db.docs.find({age: {$gt: 20}}, {email:1})`
+
 Here `{age: {$gt: 20}}` is the query, `{email:1}` is the projection.
 
 - The `_id` field is always returned unless you specify not to.
@@ -191,12 +191,12 @@ Here `{age: {$gt: 20}}` is the query, `{email:1}` is the projection.
 - use `0` or `false` to not return a field
 - use `1` to return a field
 
-```json
-db.users.find({}, {_id:false, first_name:1, surname:1})
-```
+
+`db.docs.find({}, {_id:false, first_name:1, surname:1})`
 
 
-## Examples
+
+## Query Examples: 
 
 
 - `db.docs.find({Sex:"Male"})` to find all males in the collection, where males are identified by the attribute sex.
@@ -234,12 +234,23 @@ db.users.find({}, {_id:false, first_name:1, surname:1})
 - `db.docs.find( { $or: [ { status: "A" }, { qty: { $lt: 30 } } ] } )`
  retrieves all documents in the collection where the status equals "A" or qty is less than ($lt) 30 and corresponds to the following SQL:
 
-### Sort query results
+## Sort query results
 
 - use the `sort()` method with the `find()` method.
 - `db.docs.find({twitter: {$exists: true}}).sort({surname:1 , age:-1})` to sort all documents that have a twitter attribute alphabetically by surname and within surname, from oldest to youngest 
 - **1** for **ascending** order, 
 - **-1** for **descending** order.
+
+## Limit Query results
+
+- the `limit()` method can be used to limit the number of documents returned.
+
+- `db.docs.find().limit(5)`
+
+- the `skip()` method is used to skip the number of documents
+
+- `db.docs.find({}).skip(5)` to skip the first 5 documents
+
 
 ***
 # Update documents: `update()`
@@ -329,8 +340,215 @@ db.users.find({}, {_id:false, first_name:1, surname:1})
 - `db.docs.remove( { qty: { $gt: 20 } } )` to remove all documents where the qty field is greater than 20
 
 
+***
+# Indexes
+
+- By default the only index on a document is on the _id field.
+
+- To find the indexes on a collection: `db.Collection.getIndexes()`
+- Which returns information in the following format, detailing the index field (_id) and the order of the indexes (1 is ascending; -1 is descending:
+
+```
+"key" : {
+	"_id" : 1
+},
+```
+
+- `db.collection.createIndex()` to create an index on a field other than _id: 
+
+-  `db.collection.dropIndex()` to drop an index on a field.
+- `db.docs.createIndex({age: 1})` creates an index on the age field
+-  `db.docs.dropIndex({age: 1})` to drop the index on the age field .
+- NOTE: The index on _id cannot be dropped
 
 
+***
+# Relationships in MongoDB
+Relationships represent how documents might be related to other documents.
+
+- One-to-One Relationships with Embedded Documents
+- One-to-Many Relationships with Embedded Documents
+- One-to-Many Relationships with Document References
+
+## One-to-One Relationships with Embedded Documents
+
+Documents can be **embedded** inside another document. This can be used to keep all related data inside a single document making the data easy to retrieve. An attribute in a document can contain a document.
+
+An example use would be a document for a person that contains a document containing address details.
+
+- When querying embedded documents use dot notation and quotes.
+
+- `db.docs.find({address:{$exists:true}})`
+>{ "_id" : "x1234", "name" : "John Smith", "address" : { "_id" : 101, "town" : "Ballybunion", "county" : "Kerry" } }  
+>{ "_id" : "x1235", "name" : "Jane Sweets", "address" : { "_id" : 102, "town" : "Clane", "county" : "Kildare" } }
+
+- `db.docs.find({address:{$exists:true}},{_id:0,"address.town":1})`
+
+>{ "address" : { "town" : "Ballybunion" } }  
+> { "address" : { "town" : "Clane" } }
+
+
+
+Here the document below contains an embedded document in the `engine` attribute.
+>` "{_id" : "11-G-987", "make" : "Ford", "model" : "Mondeo", "engine" : { "size" : 1.6, "zeroToSixty" : 8, "bhp" : 120 } }`
+
+- `db.docs.find({"engine.bhp":{$gt:115}})` where `bhp` is a sub-document of (or contained within) the `engine` document so use `"engine.bhp"`, `"engine.size"` etc to access these attributes.
+
+- `db.docs.find({"engine.bhp":{$gt:115}},{make:true, model:true,_id:true})`
+
+
+### One-to-Many Relationships with Embedded Documents
+
+One document can be associated with many documents. For example one student may take several modules.
+An array is an ordered collection of data. This can contain the many relationships.
+
+The following documents each contain an embedded "modules" document that contains several name : value pairs for each module taken.
+
+> { "_id" : "G00101224", "name" : "Mary", "modules" : [ { "_id" : "M100", "module" : "Databases" }, { "_id" : "M101", "module" : "Java" } ] }
+
+>{ "_id" : "G00101226", "name" : "Emer", "modules" : [ { "_id" : "M100", "module" : "Databases" }, { "_id" : "M104", "module" : "Python" } ] }  
+
+>{ "_id" : "G00101229", "name" : "Sam", "modules" : [ { "_id" : "M104", "module" : "Python" }, { "_id" : "M101", "module" : "Java" } ] }
+
+The following query will return the modules for each student:
+`db.student.find({},{"modules.module":1}`
+
+>{ "_id" : "G00101224", "modules" : [ { "module" : "Databases" }, { "module" : "Java" } ] }
+{ "_id" : "G00101226", "modules" : [ { "module" : "Databases" }, { "module" : "Python" } ] }
+{ "_id" : "G00101229", "modules" : [ { "module" : "Python" }, { "module" : "Java" } ] }
+
+## One-to-Many Relationships with Document References
+
+- Using document references is a way of normalising relationships between documents. In this way, documents can be maintained separately with the document containing a field that references the id of another document.
+
+
+This is the approach of designing normalized relationship. In this approach, both the user and address documents will be maintained separately but the user document will contain a field that will reference the address document's id field.
+
+Here the module field in the a document is an array where the values stored in the array correspond to `_id` field in a `module` document.
+
+- The aggregation pipeline stage `$lookup` is used to get information from documents with document references and can be thought of as similar to a `join` in SQL.
+
+- The [$lookup (aggregation)](https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/) pipeline stage performs a left outer join to an unsharded collection in the same database to filter in documents from the “joined” collection for processing. 
+- `$lookup` performs an equality match between a field from the input documents (localField) with a field from the documents of the joined collection (foreignField). 
+
+- `$lookup` takes 4 fields, 
+	* `from` is the collection in which to perform the lookup
+	*  `localField` - the field from the input document being searched for
+	* `foreignField` - the field from the documents of the from collection, the field to search for the `localField` value(s) in 
+	* `as` is any string provided as the name for the output array field. 
+
+
+- `db.docs.aggregate([{$lookup:{from:"docs" ,localField:"author", foreignField:"_id",as:"Written by"}}])` *Show the details of all books and for each book also show all details of the corresponding author as "Written by". Sort the results by authors name.*
+
+
+
+### examples
+
+- `db.docs.aggregate([{$match: {name:"Tom"}},{$lookup: {from:"docs",localField:"addresses",foreignField:"_id", as:"Lived In"}}])` to show all details for “Tom” including full details of his addresses
+
+- `db.docs.aggregate([{$lookup:{from:"docs" ,localField:"author", foreignField:"_id",as:"Written by"}}])` to show the details of all books and for each book also show all details of the corresponding author as "Written by". 
+
+>{ "_id" : "2", "name" : "Bill", "addresses" : [ "01001", "12967", "32920" ] }
+
+
+
+
+
+
+
+
+***
+# Aggregation
+
+- Aggregation operations are used to return computed results from documents.
+- Values from multiple documents are grouped together and operations are performed on the grouped data to return a single result. 
+- **aggregate()** calculates aggregate values for the data in a collection such as min, max, average etc.
+
+The `aggregate()` method takes 2 parameters:
+- `db.collection.aggregate(pipeline, options)`
+- The **pipeline stages** parameter is an array of options or **stages**, 
+- The **pipeline operators** which is an optional parameter and can be used to change the way the aggregation method works.
+
+The concept of a pipeline is similar to that in UNIX where the output of one operation is used as the input for another operation.
+
+- In the `db.collection.aggregate` method, pipeline stages appear in an array. Documents pass through the stages in sequence. Most stages can appear more than once in a pipeline.
+
+- The [db.collection.aggregate(pipeline, options)](https://docs.mongodb.com/manual/reference/method/db.collection.aggregate/#definition) method calculates aggregate values for the data in a collection or a view. 
+- The pipeline parameter takes an array containing a sequence of data [aggregation operations or stages](https://docs.mongodb.com/manual/reference/operator/aggregation-pipeline/). The `options` optional parameter takes a document containing additional options.
+
+
+## `aggregate()` method
+
+- The `aggregate()` method takes a pipeline stages parameter which is an array `[]`. 
+-  `db.collection.aggregate( [ { <stage> }, ... ] )`
+- **When using `aggregate()` method you must use a `$` in front of the field.** Using the `db.collection.aggregate` method, pipeline stages appear in an array. 
+
+
+## Aggregation pipeline stages include:
+
+-  `$count` : to return a count of the number of documents at this stage of the aggregation pipeline
+-  `$group` : to group input documents by a specified identifier expression and applies the accumulator expression(s), if specified, to each group.
+- `$bucket` : to categorise incoming documents into groups, called buckets, based on a specified expression and bucket boundaries.
+-  `$lookup`: Performs a left outer join to another collection in the same database to filter in documents from the “joined” collection for processing.
+-  `$match`: Filters the document stream to allow only matching documents to pass unmodified into the next pipeline stage. 
+- `$merge`: to write the resulting documents of the aggregation pipeline to a collection
+- `$project`: Reshapes each document in the stream, such as by adding new fields or removing existing fields. For each input document, outputs one document. (See `$set` and `$unset` which are aliases for `$project`)
+- `$set` : to add new fields to the document
+- `$unset`: to remove or exclude fields from documents. 
+- `$sort`: to sort the document stream by a specified sort key. 
+and more. 
+
+- **Groups** input documents by the specified `_id` expression and for each distinct grouping, outputs a document. 
+- The `_id` field of each output document contains the unique group by value. 
+- The output documents can also contain computed fields that hold the values of some **accumulator expression**.
+
+[$group (aggregation)](https://docs.mongodb.com/manual/reference/operator/aggregation/group/#pipe._S_group)
+
+**$group**:
+- `$group` is an aggregation pipeline *stages*. It works the same as `group by` in MySQL. 
+- The value of `$group` is a document. 
+- `_id` is mandatory and is the documents you wish to group by.
+- can set the `_id` to **null** so as not to aggregate by any particular ids.
+- `field1` is optional and computed using **accumulator operators**. 
+- Both `_id` and the accumulators accept expressions.
+
+The $group **stage** has the following prototype form:
+
+```json
+{
+  $group:
+    {
+      _id: <expression>, // Group By Expression
+      <field1>: { <accumulator1> : <expression1> },
+      ...
+    }
+ }
+ ```
+
+### Accumulator Operators:
+Accumulator operators include `$avg` for averages, `$min`, `$max`, `$sum`, `$first` and `$last`
+
+- [{ $sum: <expression> }](https://docs.mongodb.com/manual/reference/operator/aggregation/sum/)
+
+- the results of the aggregate method can be sorted by using the `sort` pipeline stage.
+
+
+
+
+
+## Aggregation examples using the `group` pipeline stage
+
+- `db.docs.aggregate([{$group : {_id: null, Average: {$avg: "$gpa"}}}])` to get the average gpa for all student `_id: null` where 'Average' is the string to return the results as. 'gpa' is the attribute to get the average of.
+
+- `db.docs.aggregate([{$group : {_id:"$age", "Max GPA per Age": {$max: "$gpa"}}}]` gets the maximum gpa per age group and returns it as 'Max GPA per Age'.)
+
+- `db.docs.aggregate([{$group : {_id:"$age", "Max GPA per Age":{$max:"$gpa"}}},{$sort:{_id:1}}])`
+
+- `db.docs.aggregate([{$group:{_id:null, "Total Age":{$sum:"$age"}}}])` to show the combined ages of everyone in the collection as "Total Age".
+
+- `db.docs.aggregate([{$group:{_id:"$sex", "Total Age":{$sum:"$age"}}}])` to get the total age by sex.  Note that documents with a value of `null` for the sex attribute will not be included.
+
+- `db.docs.aggregate([{$group:{_id:"$model","Avg BHP":{$avg:"$engine.bhp"}}}])` to show the average bhp for each model of car.
 
 
 
